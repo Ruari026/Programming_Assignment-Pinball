@@ -1,11 +1,12 @@
-#ifndef _ROCKETGAME_H
-#define _ROCKETGAME_H
+#ifndef _PINBALLGAME_H
+#define _PINBALLGAME_H
 
-// Card game headers
+// Pinball Game headers
 #include "GameConstants.h"
 #include "cSprite.h"
 #include "cBkGround.h"
-#include "cRocket.h"
+#include "cBall.h"
+#include "cWall.h"
 #include "cTextureMgr.h"
 #include "cTexture.h"
 

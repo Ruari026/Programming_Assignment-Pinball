@@ -10,8 +10,7 @@ cGame.h
 #include <SDL.h>
 
 // Game specific includes
-#include "rocketGame.h"
-
+#include "pinballGame.h"
 
 using namespace std;
 
@@ -41,9 +40,10 @@ private:
 	duration< double > deltaTime;
 
 	// game related variables
-	// Sprites for displaying background and rocket textures
+	// Sprites for displaying game objects
 	cSprite spriteBkgd;
-	cRocket rocketSprite;
+	cBall ballSprite;
+	vector<cWall*> wallSprites;
 	// Game objects
 	
 

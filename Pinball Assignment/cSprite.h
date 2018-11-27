@@ -28,6 +28,13 @@ private:
 	int textureWidth;
 	int textureHeight;
 
+	//Collision Detection
+	//Box Collision
+	SDL_Rect boxCollider;
+	//Per Pixel Collision
+	bool** pixelInformation;
+	vector<SDL_Point> collidablePoints;
+
 
 public:
 	cSprite();			// Default constructor
@@ -46,5 +53,15 @@ public:
 	FPoint getSpriteScale();  // Return the sprites scaling factor
 	void setSpriteScale(FPoint sScale); // set the sprites scaling factor
 	void scaleSprite(); // update the sprites width & height
+
+	void SetBoundingRect();
+	SDL_Rect GetBoundingRect();
+	bool CollidedWith(SDL_Rect* thisSprite, SDL_Rect* otherSprite);
+
+	void SetCollidablePixels(SDL_Renderer* theRenderer, SDL_Window* theWindow, string spritePath);
+	void OptimizeCollidablePixels();
+	void SetPixelPositions();
+	vector<SDL_Point> GetCollisionPoints();
+	void DrawCollidablePixels();
 };
 #endif

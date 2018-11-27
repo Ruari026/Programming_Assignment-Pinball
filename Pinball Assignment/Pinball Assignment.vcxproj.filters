@@ -24,9 +24,6 @@
     <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cGame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cRocket.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cSDL2WNDManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -42,7 +39,13 @@
     <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\GameConstants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\rocketGame.h">
+    <ClInclude Include="pinballGame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cBall.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cWall.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -53,12 +56,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cBkGround.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cGameStuVer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cRocketStuVer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cSDL2WNDManager.cpp">
@@ -73,7 +70,16 @@
     <ClCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cTextureMgr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\RocketsSDL.cpp">
+    <ClCompile Include="cBall.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cGame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PinballSDL.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cWall.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

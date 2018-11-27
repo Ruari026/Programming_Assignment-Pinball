@@ -121,27 +121,29 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cBkGround.h" />
     <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cGame.h" />
-    <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cRocket.h" />
+    <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cWall.h" />
+    <ClInclude Include="cBall.h" />
     <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cSDL2WNDManager.h" />
     <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cSprite.h" />
     <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cTexture.h" />
     <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cTextureMgr.h" />
     <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\GameConstants.h" />
     <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\resource.h" />
-    <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\rocketGame.h" />
+    <ClInclude Include="pinballGame.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\Pinball Assignment.rc" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cBkGround.cpp" />
-    <ClCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cGameStuVer.cpp" />
-    <ClCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cRocketStuVer.cpp" />
+    <ClCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cWall.cpp" />
+    <ClCompile Include="cGame.cpp" />
+    <ClCompile Include="cBall.cpp" />
     <ClCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cSDL2WNDManager.cpp" />
     <ClCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cSprite.cpp" />
     <ClCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cTexture.cpp" />
     <ClCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cTextureMgr.cpp" />
-    <ClCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\RocketsSDL.cpp" />
+    <ClCompile Include="PinballSDL.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\packages.config" />
