@@ -206,7 +206,7 @@ SDL_Rect cSprite::GetBoundingRect()
 	return cSprite::boxCollider;
 }
 
-bool cSprite::CollidedWith(SDL_Rect* thisSprite, SDL_Rect* otherSprite)
+bool cSprite::CollidedWithBox(SDL_Rect* thisSprite, SDL_Rect* otherSprite)
 {
 	//Performs the intersection test
 	if (SDL_HasIntersection(thisSprite, otherSprite))
@@ -288,7 +288,23 @@ void cSprite::OptimizeCollidablePixels()
 				if (pixelInformation[h][w] == true)
 				{
 					b = true;
-					collidablePoints.push_back({ h,w });
+					
+					bool canAdd = true;
+					for (int i = 0; i < collidablePoints.size(); i++)
+					{
+						if (collidablePoints[i].x == h)
+						{
+							if (collidablePoints[i].y == w)
+							{
+								canAdd = false;
+							}
+						}
+					}
+
+					if (canAdd)
+					{
+						collidablePoints.push_back({ h,w });
+					}
 				}
 			}
 		}
@@ -306,7 +322,23 @@ void cSprite::OptimizeCollidablePixels()
 				if (pixelInformation[h][w] == true)
 				{
 					b = true;
-					collidablePoints.push_back({ h,w });
+
+					bool canAdd = true;
+					for (int i = 0; i < collidablePoints.size(); i++)
+					{
+						if (collidablePoints[i].x == h)
+						{
+							if (collidablePoints[i].y == w)
+							{
+								canAdd = false;
+							}
+						}
+					}
+
+					if (canAdd)
+					{
+						collidablePoints.push_back({ h,w });
+					}
 				}
 			}
 		}
@@ -324,7 +356,23 @@ void cSprite::OptimizeCollidablePixels()
 				if (pixelInformation[h][w] == true)
 				{
 					b = true;
-					collidablePoints.push_back({ h,w });
+
+					bool canAdd = true;
+					for (int i = 0; i < collidablePoints.size(); i++)
+					{
+						if (collidablePoints[i].x == h)
+						{
+							if (collidablePoints[i].y == w)
+							{
+								canAdd = false;
+							}
+						}
+					}
+
+					if (canAdd)
+					{
+						collidablePoints.push_back({ h,w });
+					}
 				}
 			}
 		}
@@ -342,7 +390,23 @@ void cSprite::OptimizeCollidablePixels()
 				if (pixelInformation[h][w] == true)
 				{
 					b = true;
-					collidablePoints.push_back({ h,w });
+
+					bool canAdd = true;
+					for (int i = 0; i < collidablePoints.size(); i++)
+					{
+						if (collidablePoints[i].x == h)
+						{
+							if (collidablePoints[i].y == w)
+							{
+								canAdd = false;
+							}
+						}
+					}
+
+					if (canAdd)
+					{
+						collidablePoints.push_back({ h,w });
+					}
 				}
 			}
 		}
@@ -362,26 +426,31 @@ vector<SDL_Point> cSprite::GetCollisionPoints()
 	return collidablePoints;
 }
 
-void cSprite::DrawCollidablePixels()
+bool cSprite::CollidedWithPixels(SDL_Point ballPos, vector<SDL_Point> spriteCollisionPoints)
 {
-	for (int h = 0; h < textureHeight; h++)
+	vector<SDL_Point> collidedPoints;
+
+	for (int i = 0; i < spriteCollisionPoints.size(); i++)
 	{
-		string s;
+		SDL_Point pixelPos = spriteCollisionPoints[i];
 
-		for (int w = 0; w < textureWidth; w++)
+		float distanceX = pixelPos.x - ballPos.x;
+		float distanceY = pixelPos.y - ballPos.y;
+
+		float distanceToPixel = sqrt((distanceX*distanceX) + (distanceY*distanceY));
+
+		if (distanceToPixel < 25)
 		{
-			if (pixelInformation[h][w] == true)
-			{
-				s += 'X';
-			}
-			else
-			{
-				s += '.';
-			}
+			collidedPoints.push_back(pixelPos);
 		}
-
-		cout << s << endl;
 	}
 
-	cout << endl;
+	if (collidedPoints.size() > 1)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }

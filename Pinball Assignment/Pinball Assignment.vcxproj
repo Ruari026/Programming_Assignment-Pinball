@@ -120,6 +120,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cBkGround.h" />
+    <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cBumper.h" />
+    <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cFlipper.h" />
     <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cGame.h" />
     <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cWall.h" />
     <ClInclude Include="cBall.h" />
@@ -136,6 +138,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cBkGround.cpp" />
+    <ClCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cBumper.cpp" />
+    <ClCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cFlipper.cpp" />
     <ClCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cWall.cpp" />
     <ClCompile Include="cGame.cpp" />
     <ClCompile Include="cBall.cpp" />

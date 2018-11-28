@@ -48,6 +48,12 @@
     <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cWall.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cFlipper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cBumper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\Pinball Assignment.rc">
@@ -80,6 +86,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cWall.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cFlipper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cBumper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

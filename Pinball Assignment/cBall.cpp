@@ -131,6 +131,21 @@ FPoint cBall::getBallVelocity()
 
 /*
 =================================================================
+  Respawning the ball
+=================================================================
+*/
+void cBall::RespawnBall(int posX, int posY)
+{
+	ballPositionX = posX;
+	ballPositionY = posY;
+
+	ballVelocity.X = 0;
+	ballVelocity.Y = 0;
+}
+
+
+/*
+=================================================================
 Sets the rotation angle for the ball
 =================================================================
 */
@@ -170,15 +185,16 @@ void cBall::CalculateCollisions(vector<SDL_Point> otherCollidablePoints)
 
 		float distanceToPixel = sqrt((distanceX*distanceX) + (distanceY*distanceY));
 
-		if (distanceToPixel < 25)
+		if (distanceToPixel < getSpriteCentre().x)
 		{
 			collisionPoints.push_back(pixelPos);
 		}
 	}
 
-	if (collisionPoints.size() > 1)
+	if (collisionPoints.size() > 1 && canCollide)
 	{
-		cout << "-Collision Details-" << endl;
+		cout << "-Collision-" << endl;
+		cout << "--------------------" << endl;
 
 		//Calculating the reflection line
 		SDL_Point collisionSurface = { (collisionPoints[collisionPoints.size() - 1].x - collisionPoints[0].x),(collisionPoints[collisionPoints.size() - 1].y - collisionPoints[0].y) };
@@ -253,7 +269,7 @@ void cBall::CalculateCollisions(vector<SDL_Point> otherCollidablePoints)
 				}
 			}
 		}
-
+		canCollide = false;
 		cout << "--------------------" << endl << endl;
 	}
 }

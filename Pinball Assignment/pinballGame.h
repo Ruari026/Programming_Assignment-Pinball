@@ -7,6 +7,8 @@
 #include "cBkGround.h"
 #include "cBall.h"
 #include "cWall.h"
+#include "cFlipper.h"
+#include "cBumper.h"
 #include "cTextureMgr.h"
 #include "cTexture.h"
 

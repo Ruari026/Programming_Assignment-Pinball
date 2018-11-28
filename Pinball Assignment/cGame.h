@@ -39,12 +39,16 @@ private:
 	time_point< high_resolution_clock > m_CurrentTime;
 	duration< double > deltaTime;
 
-	// game related variables
-	// Sprites for displaying game objects
-	cSprite spriteBkgd;
-	cBall ballSprite;
-	vector<cWall*> wallSprites;
+	// Game related variables
+	int gameScore = 0;
 	// Game objects
+	cSprite spriteBkgd;
+	vector<cWall*> wallSprites;
+	cFlipper leftFlipper;
+	cFlipper rightFlipper;
+	vector<cBumper*> bumperSprites;
+	cBall ballSprite;
+	// UI
 	
 
 };

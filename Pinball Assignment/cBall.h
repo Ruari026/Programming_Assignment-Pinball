@@ -17,6 +17,7 @@ private:
 	FPoint ballVelocity;
 
 public:
+	bool canCollide;
 	void initialise();
 	void update(double deltaTime);		// Ball update method
 	void addForceToBall(int forceX, int forceY);   // Sets the velocity for the ball
@@ -27,6 +28,7 @@ public:
 	void CalculateBallVelocity();
 	void CalculateBallPosition();
 	void SetBallPosition();
+	void RespawnBall(int posX, int posY);
 	void DetectBasicCollisions();
 	void CalculateCollisions(vector<SDL_Point> otherCollidablePoints); //Calculating if the ball has collided with anything
 };
