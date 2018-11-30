@@ -25,7 +25,7 @@ public:
 	void render(SDL_Window* theSDLWND, SDL_Renderer* theRenderer);
 	void render(SDL_Window* theSDLWND, SDL_Renderer* theRenderer, double rotAngle, SDL_Point* spriteCentre);
 	void update();
-	void update(double deltaTime);
+	void update(double deltaTime, SDL_Renderer* theRenderer);
 	bool getInput(bool theLoop);
 	double getElapsedSeconds();
 
@@ -49,6 +49,10 @@ private:
 	vector<cBumper*> bumperSprites;
 	cBall ballSprite;
 	// UI
+	vector<LPCSTR> fontList;
+	vector<LPCSTR> fontsToUse;
+	vector<LPCSTR> gameTextNames;
+	vector<LPCSTR> gameTextList;
 	
 
 };

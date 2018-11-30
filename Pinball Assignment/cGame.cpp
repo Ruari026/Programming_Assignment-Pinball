@@ -7,6 +7,7 @@ cGame.cpp
 
 cGame* cGame::pInstance = NULL;
 static cTextureMgr* theTextureMgr = cTextureMgr::getInstance();
+static cFontMgr* theFontMgr = cFontMgr::getInstance();
 
 /*
 =================================================================================
@@ -42,6 +43,7 @@ void cGame::initialise(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 	this->m_lastTime = high_resolution_clock::now();
 
 	theTextureMgr->setRenderer(theRenderer);
+	theFontMgr->initFontLib();
 	
 	//Game Background
 	theTextureMgr->addTexture("theBackground", "Images\\Background.png");
@@ -143,6 +145,10 @@ void cGame::initialise(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 	ballSprite.initialise();
 	ballSprite.setTexture(theTextureMgr->getTexture("theBall"));
 	ballSprite.setSpriteDimensions(theTextureMgr->getTexture("theBall")->getTWidth(), theTextureMgr->getTexture("theBall")->getTHeight());
+
+	//Score Text
+	theFontMgr->addFont("digital", "Fonts\\DS-DIGIB.TTF", 48);
+	theTextureMgr->addTexture("scoreText", theFontMgr->getFont("digital")->createTextTexture(theRenderer, "Score: 0", textType::solid, { 255,255,255,255 }, { 0,0,0,0 }));
 }
 
 void cGame::run(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
@@ -155,7 +161,7 @@ void cGame::run(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 		double elapsedTime = this->getElapsedSeconds();
 
 		loop = this->getInput(loop);
-		this->update(elapsedTime);
+		this->update(elapsedTime, theRenderer);
 		this->render(theSDLWND, theRenderer);
 	}
 }
@@ -164,6 +170,7 @@ void cGame::render(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 {
 	SDL_RenderClear(theRenderer);
 	
+	//Gameobjects
 	spriteBkgd.render(theRenderer, NULL, NULL, spriteBkgd.getSpriteScale());
 	
 	for (int w = 0; w < wallSprites.size(); w++)
@@ -181,6 +188,11 @@ void cGame::render(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 
 	ballSprite.render(theRenderer, &ballSprite.getSpriteDimensions(), &ballSprite.getSpritePos(), ballSprite.getBallRotation(), &ballSprite.getSpriteCentre(), ballSprite.getSpriteScale());
 	
+	//UI Elements
+	cTexture* tempTexture = theTextureMgr->getTexture("scoreText");
+	SDL_Rect pos = { (WINDOW_WIDTH/2)-(tempTexture->getTWidth()/2), 75, tempTexture->getTextureRect().w, tempTexture->getTextureRect().h };
+	tempTexture->renderTexture(theRenderer, tempTexture->getTexture(), &tempTexture->getTextureRect(), &pos, { 10,10 });
+
 	SDL_RenderPresent(theRenderer);
 }
 
@@ -194,7 +206,7 @@ void cGame::update()
 
 }
 
-void cGame::update(double deltaTime)
+void cGame::update(double deltaTime, SDL_Renderer* theRenderer)
 {
 	//Calculating the ball's new velocity
 	ballSprite.CalculateBallVelocity();
@@ -210,13 +222,34 @@ void cGame::update(double deltaTime)
 		{
 			if (ballSprite.CollidedWithPixels({ (ballSprite.getSpritePos().x + ballSprite.getSpriteCentre().x),(ballSprite.getSpritePos().y + ballSprite.getSpriteCentre().y) }, wallSprites[w]->GetCollisionPoints()))
 			{
+				//Collision Reflection
 				ballSprite.CalculateCollisions(wallSprites[w]->GetCollisionPoints());
 			}
 		}
 	}
 	//Collisions with the Flippers
-	ballSprite.CalculateCollisions(leftFlipper.GetRotatedCollisionPoints());
-	ballSprite.CalculateCollisions(rightFlipper.GetRotatedCollisionPoints());
+	if (ballSprite.CollidedWithPixels({ (ballSprite.getSpritePos().x + ballSprite.getSpriteCentre().x),(ballSprite.getSpritePos().y + ballSprite.getSpriteCentre().y) }, leftFlipper.GetCollisionPoints()))
+	{
+		//Collision Reflection
+		ballSprite.CalculateCollisions(leftFlipper.GetRotatedCollisionPoints());
+
+		//Force Addition
+		if (leftFlipper.GetAnimationState())
+		{
+			ballSprite.addForceToBall(10, -30);
+		}
+	}
+	if (ballSprite.CollidedWithPixels({ (ballSprite.getSpritePos().x + ballSprite.getSpriteCentre().x),(ballSprite.getSpritePos().y + ballSprite.getSpriteCentre().y) }, rightFlipper.GetCollisionPoints()))
+	{
+		//Collision Reflection
+		ballSprite.CalculateCollisions(rightFlipper.GetRotatedCollisionPoints());
+	
+		//Force Addition
+		if (rightFlipper.GetAnimationState())
+		{
+			ballSprite.addForceToBall(-5, -30);
+		}
+	}
 
 	//Collisions with the Bumpers
 	for (int b = 0; b < bumperSprites.size(); b++)
@@ -225,12 +258,17 @@ void cGame::update(double deltaTime)
 		{
 			if (ballSprite.CollidedWithPixels({ (ballSprite.getSpritePos().x + ballSprite.getSpriteCentre().x),(ballSprite.getSpritePos().y + ballSprite.getSpriteCentre().y) }, bumperSprites[b]->GetCollisionPoints()))
 			{
-				//Collision
+				//Collision Reflection
 				ballSprite.CalculateCollisions(bumperSprites[b]->GetCollisionPoints());
 
-				//Points
+				//Points Addition
 				gameScore += bumperSprites[b]->GetBumperValue();
 				cout << "Score: " << gameScore << endl << endl;
+
+				theTextureMgr->deleteTexture("scoreText");
+				string s = "Score: ";
+				s += to_string(gameScore);
+				theTextureMgr->addTexture("scoreText", theFontMgr->getFont("digital")->createTextTexture(theRenderer, s.c_str(), textType::solid, { 255,255,255,255 }, { 0,0,0,0 }));
 			}
 		}
 	}

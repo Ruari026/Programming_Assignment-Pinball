@@ -46,6 +46,14 @@ void cBall::CalculateBallVelocity()
 
 	ballVelocity.X = ((ballVelocity.X) / (-1 * airResistance)) * (-1 * airResistance) * exp(-1 * airResistance*timeStep);
 	ballVelocity.Y = (gravity * timeStep) + ballVelocity.Y;
+
+	float velocityMagnitude = sqrt((ballVelocity.X * ballVelocity.X) + (ballVelocity.Y * ballVelocity.Y));
+	
+	if (velocityMagnitude > 50)
+	{
+		ballVelocity.X = (ballVelocity.X / velocityMagnitude) * 50;
+		ballVelocity.Y = (ballVelocity.Y / velocityMagnitude) * 50;
+	}
 }
 
 void cBall::CalculateBallPosition()
@@ -197,18 +205,19 @@ void cBall::CalculateCollisions(vector<SDL_Point> otherCollidablePoints)
 		cout << "--------------------" << endl;
 
 		//Calculating the reflection line
+		cout << "Reflection Calculation" << endl;
 		SDL_Point collisionSurface = { (collisionPoints[collisionPoints.size() - 1].x - collisionPoints[0].x),(collisionPoints[collisionPoints.size() - 1].y - collisionPoints[0].y) };
-		cout << "Collision Surface: " << collisionSurface.x << " " << collisionSurface.y << endl;
-		
+		cout << "- Collision Surface: " << collisionSurface.x << " " << collisionSurface.y << endl;
+
 		if (collisionSurface.x == 0)
 		{
-			cout << "Surface Angle: 90" << endl;
+			cout << "- Surface Angle: 90" << endl;
 		}
 		else
 		{
 			float angle = (0 - collisionSurface.y) / (0 - collisionSurface.x);
 			angle = atan(angle);
-			cout << "Surface Angle: " << angle << endl;
+			cout << "- Surface Angle: " << angle << endl;
 		}
 
 		float normalRotRadians = 90 * PI / 180;
@@ -224,30 +233,53 @@ void cBall::CalculateCollisions(vector<SDL_Point> otherCollidablePoints)
 		{
 			degrees = (atan(surfaceNormalY / surfaceNormalX)) * 180 / PI;
 		}
-		cout << "Normal Degrees: " << degrees << endl;
+		cout << "- Normal Degrees: " << degrees << endl;
 
 		//Reflecting the ball's velocity
-		float inputVelocityX = ballVelocity.X * -0.9f;
-		float inputVelocityY = ballVelocity.Y * -0.9f;
-		cout << "Input Velocity: " << inputVelocityX << " " << inputVelocityY << endl;
+		float inputVelocityX = ballVelocity.X * -0.8f;
+		float inputVelocityY = ballVelocity.Y * -0.8f;
+		cout << "- Input Velocity: " << inputVelocityX << " " << inputVelocityY << endl;
 
 		float reflectionRadians = degrees * PI / 180;
 
 		float outputVelocityX = (inputVelocityX * cos(2 * reflectionRadians)) + (inputVelocityY * sin(2 * reflectionRadians));
 		float outputVelocityY = (inputVelocityX * sin(2 * reflectionRadians)) - (inputVelocityY * cos(2 * reflectionRadians));
-		cout << "Output Velocity: " << outputVelocityX << " " << outputVelocityY << endl;
+		cout << "- Output Velocity: " << outputVelocityX << " " << outputVelocityY << endl << endl;
 
 		//Setting the new velocity
 		ballVelocity.X = (int)outputVelocityX;
 		ballVelocity.Y = (int)outputVelocityY;
 
 		//Moving the ball outside of the collider
+		cout << "Position Calculation" << endl;
+		cout << "- Ball Start: " << (ballPositionX + getSpriteCentre().x) << " " << (ballPositionY + getSpriteCentre().y) << endl;
+		SDL_Point closestPixel = otherCollidablePoints[0];
+		float distanceToClosest = sqrt((((ballPositionX + getSpriteCentre().x) - closestPixel.x)*((ballPositionX + getSpriteCentre().x) - closestPixel.x)) + (((ballPositionY + getSpriteCentre().y) - closestPixel.y)*((ballPositionY + getSpriteCentre().y) - closestPixel.y)));
+		for (int i = 1; i < otherCollidablePoints.size(); i++)
+		{
+			SDL_Point nextPixel = otherCollidablePoints[i];
+			float distanceToNext = sqrt((((ballPositionX + getSpriteCentre().x) - nextPixel.x)*((ballPositionX + getSpriteCentre().x) - nextPixel.x)) + (((ballPositionY + getSpriteCentre().y) - nextPixel.y)*((ballPositionY + getSpriteCentre().y) - nextPixel.y)));
+
+			if (distanceToNext < distanceToClosest)
+			{
+				closestPixel = nextPixel;
+				distanceToClosest = distanceToNext;
+			}
+		}
+		cout << "- Reference Point: " << closestPixel.x << " " << closestPixel.y << endl;
+
+		float movementX = (ballPositionX + getSpriteCentre().x) - closestPixel.x;
+		float movementY = (ballPositionY + getSpriteCentre().y) - closestPixel.y;
+		cout << "- Movement Direction: " << movementX << " " << movementY << endl;
+
+		float magnitude = sqrt((movementX*movementX) + (movementY*movementY));
+		cout << "- Movement Magnitude: " << magnitude << endl;
+		movementX /= magnitude;
+		movementY /= magnitude;
+
+		cout << "- Normalized Movement: " << movementX << " " << movementY << endl;
 		while (collisionPoints.size() > 0)
 		{
-			float magnitude = sqrt((outputVelocityX*outputVelocityX) + (outputVelocityY*outputVelocityY));
-			float movementX = outputVelocityX / magnitude;
-			float movementY = outputVelocityY / magnitude;
-
 			ballPositionX += movementX;
 			ballPositionY += movementY;
 
@@ -263,12 +295,13 @@ void cBall::CalculateCollisions(vector<SDL_Point> otherCollidablePoints)
 
 				float distanceToPixel = sqrt((distanceX*distanceX) + (distanceY*distanceY));
 
-				if (distanceToPixel < 26)
+				if (distanceToPixel < 30)
 				{
 					collisionPoints.push_back(pixelPos);
 				}
 			}
 		}
+		cout << "- Ball End: " << ballPositionX << " " << ballPositionY << endl;
 		canCollide = false;
 		cout << "--------------------" << endl << endl;
 	}

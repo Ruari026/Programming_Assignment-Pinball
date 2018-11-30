@@ -38,6 +38,7 @@ public:
 	SDL_Point RotateAroundPoint(SDL_Point pointToRotate, SDL_Point pointAround, float rotationAmount);
 
 	void Activate();
+	bool GetAnimationState();
 	void LeftRotationAnimation(float deltaTime);
 	void RightRotationAnimation(float deltaTime);
 };

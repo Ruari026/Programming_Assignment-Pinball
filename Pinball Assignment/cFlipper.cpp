@@ -180,6 +180,18 @@ void cFlipper::Activate()
 	activated = true;
 }
 
+bool cFlipper::GetAnimationState()
+{
+	if (activated)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 void cFlipper::LeftRotationAnimation(float deltaTime)
 {
 	//Getting the new rotation
