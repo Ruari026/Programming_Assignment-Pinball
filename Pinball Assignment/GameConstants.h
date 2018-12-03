@@ -49,7 +49,10 @@ inline SDL_Point operator+(SDL_Point const &a, SDL_Point const &b)
 	return SDL_Point{ a.x + b.x , a.y + b.y };
 }
 
+enum class gameState {mainMenu, instructions, gameScene, hiScores };
 enum class textType { solid, blended, shaded };
+enum class soundType {music, sfx };
 enum class FlipperType { LEFT, RIGHT };
+enum class ButtonType {play,instruction,exit};
 
 #endif

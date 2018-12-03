@@ -13,5 +13,7 @@
 #include "cTexture.h"
 #include "cFontMgr.h"
 #include "cFont.h"
+#include "cButtonMgr.h"
+#include "cButton.h"
 
 #endif

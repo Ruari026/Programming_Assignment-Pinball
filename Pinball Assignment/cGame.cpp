@@ -8,6 +8,7 @@ cGame.cpp
 cGame* cGame::pInstance = NULL;
 static cTextureMgr* theTextureMgr = cTextureMgr::getInstance();
 static cFontMgr* theFontMgr = cFontMgr::getInstance();
+static cButtonMgr* theButtonMgr = cButtonMgr::getInstance();
 
 /*
 =================================================================================
@@ -146,9 +147,20 @@ void cGame::initialise(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 	ballSprite.setTexture(theTextureMgr->getTexture("theBall"));
 	ballSprite.setSpriteDimensions(theTextureMgr->getTexture("theBall")->getTWidth(), theTextureMgr->getTexture("theBall")->getTHeight());
 
+	//Loading Game Fonts
 	//Score Text
 	theFontMgr->addFont("digital", "Fonts\\DS-DIGIB.TTF", 48);
 	theTextureMgr->addTexture("scoreText", theFontMgr->getFont("digital")->createTextTexture(theRenderer, "Score: 0", textType::solid, { 255,255,255,255 }, { 0,0,0,0 }));
+
+	//Loading game buttons
+	//Quit Button
+	theTextureMgr->addTexture("quit_btn", "Images\\Button.png");
+	cButton* newBtn = new cButton();
+	newBtn->setTexture(theTextureMgr->getTexture("quit_btn"));
+	newBtn->setSpritePos({ 25,25 });
+	newBtn->setSpriteDimensions(theTextureMgr->getTexture("quit_btn")->getTWidth(), theTextureMgr->getTexture("quit_btn")->getTHeight());
+	theButtonMgr->add("quit-btn", newBtn);
+	
 }
 
 void cGame::run(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
@@ -192,6 +204,8 @@ void cGame::render(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 	cTexture* tempTexture = theTextureMgr->getTexture("scoreText");
 	SDL_Rect pos = { (WINDOW_WIDTH/2)-(tempTexture->getTWidth()/2), 75, tempTexture->getTextureRect().w, tempTexture->getTextureRect().h };
 	tempTexture->renderTexture(theRenderer, tempTexture->getTexture(), &tempTexture->getTextureRect(), &pos, { 10,10 });
+
+	theButtonMgr->getBtn("quit_btn")->render(theRenderer, &theButtonMgr->getBtn("quit_btn")->getSpriteDimensions(), &theButtonMgr->getBtn("quit_btn")->getSpritePos(), theButtonMgr->getBtn("quit_btn")->getSpriteScale());
 
 	SDL_RenderPresent(theRenderer);
 }
