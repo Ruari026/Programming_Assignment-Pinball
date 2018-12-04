@@ -13,6 +13,7 @@ Defualt Constructor
 */
 cButton::cButton() : cSprite()
 {
+
 }
 
 

@@ -13,11 +13,23 @@ Initialise the sprite variables
 */
 void cBall::initialise()
 {
-	ballPositionX = (WINDOW_WIDTH / 2) - 25;
-	ballPositionY = (WINDOW_HEIGHT - 200);
+	ballPositionX = (WINDOW_WIDTH / 2 - 25);
+	ballPositionY = ((WINDOW_HEIGHT / 2) - 100);
 	setSpritePos({ (int)ballPositionX,(int)ballPositionY });
 
-	ballVelocity.X = 0;
+	//Randomiser
+	random_device rd;
+	mt19937 gen{ rd() };
+	uniform_int_distribution<> random{ 0,1 };
+	int direction = random(gen);
+	if (direction == 0)
+	{
+		ballVelocity.X = 10;
+	}
+	else
+	{
+		ballVelocity.X = -10;
+	}
 	ballVelocity.Y = 0;
 }
 
@@ -68,7 +80,7 @@ void cBall::CalculateBallPosition()
 
 void cBall::SetBallPosition()
 {
-	SDL_Rect newPos = getSpritePos();
+	SDL_Point newPos = { getSpritePos().x, getSpritePos().y };
 
 	newPos.x = (int)ballPositionX;
 	newPos.y = (int)ballPositionY;

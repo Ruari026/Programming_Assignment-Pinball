@@ -26,7 +26,7 @@ public:
 	void render(SDL_Window* theSDLWND, SDL_Renderer* theRenderer, double rotAngle, SDL_Point* spriteCentre);
 	void update();
 	void update(double deltaTime, SDL_Renderer* theRenderer);
-	bool getInput(bool theLoop);
+	bool getInput();
 	double getElapsedSeconds();
 
 	static cGame* getInstance();
@@ -34,15 +34,25 @@ public:
 private:
 
 	static cGame* pInstance;
+	bool loop = true;
+	gameState currentGameState;
+	SDL_Point clickedArea;
+
 	// for framerates
 	time_point< high_resolution_clock > m_lastTime;
 	time_point< high_resolution_clock > m_CurrentTime;
 	duration< double > deltaTime;
 
-	// Game related variables
+	// Main Menu Scene
+	cSprite menuBkgd;
+
+	//Instructions Scene
+	cSprite instructionsBkgd;
+
+	// Game Scene
 	int gameScore = 0;
 	// Game objects
-	cSprite spriteBkgd;
+	cSprite gameBkgd;
 	vector<cWall*> wallSprites;
 	cFlipper leftFlipper;
 	cFlipper rightFlipper;
@@ -53,8 +63,6 @@ private:
 	vector<LPCSTR> fontsToUse;
 	vector<LPCSTR> gameTextNames;
 	vector<LPCSTR> gameTextList;
-	
-
 };
 
 #endif

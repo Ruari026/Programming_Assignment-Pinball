@@ -94,7 +94,7 @@ void cFlipper::SetFlipperRotation(float rotationAmount)
 {
 	flipperRotAngle = rotationAmount;
 
-	SDL_Rect newPos = getSpritePos();
+	SDL_Point newPos = { getSpritePos().x,getSpritePos().y };
 
 	float radians = (flipperRotAngle * (PI / -180.0f));
 

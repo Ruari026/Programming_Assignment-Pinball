@@ -7,6 +7,7 @@
 #include <iostream>
 #include <string>
 #include <chrono>
+#include <random>
 #include <cstdlib>
 
 using namespace std::chrono;
@@ -49,7 +50,7 @@ inline SDL_Point operator+(SDL_Point const &a, SDL_Point const &b)
 	return SDL_Point{ a.x + b.x , a.y + b.y };
 }
 
-enum class gameState {mainMenu, instructions, gameScene, hiScores };
+enum class gameState {mainMenu, instructions, gameScene, hiScores, exit};
 enum class textType { solid, blended, shaded };
 enum class soundType {music, sfx };
 enum class FlipperType { LEFT, RIGHT };
