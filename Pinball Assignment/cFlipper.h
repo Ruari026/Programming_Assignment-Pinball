@@ -9,6 +9,8 @@ cFlipper.h
 #define _CFLIPPER_H
 #include "cSprite.h"
 
+enum class FlipperType { LEFT, RIGHT };
+
 class cFlipper : public cSprite
 {
 private:

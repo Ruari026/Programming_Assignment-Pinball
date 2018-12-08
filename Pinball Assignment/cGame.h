@@ -28,6 +28,7 @@ public:
 	void update(double deltaTime, SDL_Renderer* theRenderer);
 	bool getInput();
 	double getElapsedSeconds();
+	void ResetGame(SDL_Renderer* theRenderer);
 
 	static cGame* getInstance();
 
@@ -58,11 +59,9 @@ private:
 	cFlipper rightFlipper;
 	vector<cBumper*> bumperSprites;
 	cBall ballSprite;
-	// UI
-	vector<LPCSTR> fontList;
-	vector<LPCSTR> fontsToUse;
-	vector<LPCSTR> gameTextNames;
-	vector<LPCSTR> gameTextList;
+
+	//Hi Scores Scene
+	cSprite hiScoresBkgd;
 };
 
 #endif

@@ -15,5 +15,6 @@
 #include "cFont.h"
 #include "cButtonMgr.h"
 #include "cButton.h"
+#include "cHiScoreMgr.h"
 
 #endif

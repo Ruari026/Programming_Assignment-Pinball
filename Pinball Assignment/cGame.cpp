@@ -9,6 +9,7 @@ cGame* cGame::pInstance = NULL;
 static cTextureMgr* theTextureMgr = cTextureMgr::getInstance();
 static cFontMgr* theFontMgr = cFontMgr::getInstance();
 static cButtonMgr* theButtonMgr = cButtonMgr::getInstance();
+static cHiScoreMgr* theScoreMgr;
 
 /*
 =================================================================================
@@ -19,6 +20,7 @@ cGame::cGame()
 {
 
 }
+
 
 
 /*
@@ -204,6 +206,40 @@ void cGame::initialise(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 		theTextureMgr->addTexture("scoreText", theFontMgr->getFont("digital")->createTextTexture(theRenderer, "Score: 0", textType::solid, { 255,255,255,255 }, { 0,0,0,0 }));
 	}
 
+	//Hi Score Scene Elements
+	{
+		//Scene Background
+		theTextureMgr->addTexture("hiScoresBackground", "Images\\Hi-Scores\\HiScoresDesign.png");
+		hiScoresBkgd.setSpritePos({ 0, 0 });
+		hiScoresBkgd.setTexture(theTextureMgr->getTexture("hiScoresBackground"));
+		hiScoresBkgd.setSpriteDimensions(theTextureMgr->getTexture("hiScoresBackground")->getTWidth(), theTextureMgr->getTexture("hiScoresBackground")->getTHeight());
+
+		//Scene Fonts
+		theFontMgr->addFont("scores", "Fonts\\TCB_____.TTF", 48);
+		theTextureMgr->addTexture("score1", theFontMgr->getFont("scores")->createTextTexture(theRenderer, "1: 0", textType::solid, { 0,0,0,255 }, { 0,0,0,0 }));
+		theTextureMgr->addTexture("score2", theFontMgr->getFont("scores")->createTextTexture(theRenderer, "2: 0", textType::solid, { 0,0,0,255 }, { 0,0,0,0 }));
+		theTextureMgr->addTexture("score3", theFontMgr->getFont("scores")->createTextTexture(theRenderer, "3: 0", textType::solid, { 0,0,0,255 }, { 0,0,0,0 }));
+		theTextureMgr->addTexture("score4", theFontMgr->getFont("scores")->createTextTexture(theRenderer, "4: 0", textType::solid, { 0,0,0,255 }, { 0,0,0,0 }));
+		theTextureMgr->addTexture("score5", theFontMgr->getFont("scores")->createTextTexture(theRenderer, "5: 0", textType::solid, { 0,0,0,255 }, { 0,0,0,0 }));
+
+		
+		//Scene Buttons
+		//Game Restart Button
+		theTextureMgr->addTexture("scoresButton1", "Images\\Hi-Scores\\RestartButton.png");
+		cButton* newBtn = new cButton();
+		newBtn->setTexture(theTextureMgr->getTexture("scoresButton1"));
+		newBtn->setSpritePos({ 75,800 });
+		newBtn->setSpriteDimensions(theTextureMgr->getTexture("scoresButton1")->getTWidth(), theTextureMgr->getTexture("scoresButton1")->getTHeight());
+		theButtonMgr->add("Restart_Btn", newBtn);
+		//Quit to Main Menu Button
+		theTextureMgr->addTexture("scoresButton2", "Images\\Hi-Scores\\MainMenuButton.png");
+		newBtn = new cButton();
+		newBtn->setTexture(theTextureMgr->getTexture("scoresButton2"));
+		newBtn->setSpritePos({ 450,800 });
+		newBtn->setSpriteDimensions(theTextureMgr->getTexture("scoresButton2")->getTWidth(), theTextureMgr->getTexture("scoresButton2")->getTHeight());
+		theButtonMgr->add("MainMenu_Btn", newBtn);
+	}
+
 	//Setting Starting Scene
 	currentGameState = gameState::mainMenu;
 	
@@ -278,6 +314,34 @@ void cGame::render(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 			tempTexture->renderTexture(theRenderer, tempTexture->getTexture(), &tempTexture->getTextureRect(), &pos, { 10,10 });
 		}
 		break;
+
+		case (gameState::hiScores):
+		{
+			//Background
+			hiScoresBkgd.render(theRenderer, NULL, NULL, hiScoresBkgd.getSpriteScale());
+
+			//Scores
+			cTexture* tempTexture = theTextureMgr->getTexture("score1");
+			SDL_Rect pos = { (WINDOW_WIDTH / 2) - (tempTexture->getTWidth() / 2), 190, tempTexture->getTextureRect().w, tempTexture->getTextureRect().h };
+			tempTexture->renderTexture(theRenderer, tempTexture->getTexture(), &tempTexture->getTextureRect(), &pos, { 10,10 });
+			tempTexture = theTextureMgr->getTexture("score2");
+			pos = { (WINDOW_WIDTH / 2) - (tempTexture->getTWidth() / 2), 290, tempTexture->getTextureRect().w, tempTexture->getTextureRect().h };
+			tempTexture->renderTexture(theRenderer, tempTexture->getTexture(), &tempTexture->getTextureRect(), &pos, { 10,10 });
+			tempTexture = theTextureMgr->getTexture("score3");
+			pos = { (WINDOW_WIDTH / 2) - (tempTexture->getTWidth() / 2), 390, tempTexture->getTextureRect().w, tempTexture->getTextureRect().h };
+			tempTexture->renderTexture(theRenderer, tempTexture->getTexture(), &tempTexture->getTextureRect(), &pos, { 10,10 });
+			tempTexture = theTextureMgr->getTexture("score4");
+			pos = { (WINDOW_WIDTH / 2) - (tempTexture->getTWidth() / 2), 490, tempTexture->getTextureRect().w, tempTexture->getTextureRect().h };
+			tempTexture->renderTexture(theRenderer, tempTexture->getTexture(), &tempTexture->getTextureRect(), &pos, { 10,10 });
+			tempTexture = theTextureMgr->getTexture("score5");
+			pos = { (WINDOW_WIDTH / 2) - (tempTexture->getTWidth() / 2), 590, tempTexture->getTextureRect().w, tempTexture->getTextureRect().h };
+			tempTexture->renderTexture(theRenderer, tempTexture->getTexture(), &tempTexture->getTextureRect(), &pos, { 10,10 });
+
+			//Buttons
+			theButtonMgr->getBtn("Restart_Btn")->render(theRenderer, &theButtonMgr->getBtn("Restart_Btn")->getSpriteDimensions(), &theButtonMgr->getBtn("Restart_Btn")->getSpritePos(), theButtonMgr->getBtn("Restart_Btn")->getSpriteScale());
+			theButtonMgr->getBtn("MainMenu_Btn")->render(theRenderer, &theButtonMgr->getBtn("MainMenu_Btn")->getSpriteDimensions(), &theButtonMgr->getBtn("MainMenu_Btn")->getSpritePos(), theButtonMgr->getBtn("MainMenu_Btn")->getSpriteScale());
+		}
+		break;
 	}
 	
 	SDL_RenderPresent(theRenderer);
@@ -299,15 +363,42 @@ void cGame::update(double deltaTime, SDL_Renderer* theRenderer)
 	{
 		case (gameState::mainMenu):
 		{
-			currentGameState = theButtonMgr->getBtn("Play_Btn")->update(currentGameState, gameState::gameScene, clickedArea);
-			currentGameState = theButtonMgr->getBtn("Instructions_Btn")->update(currentGameState, gameState::instructions, clickedArea);
-			currentGameState = theButtonMgr->getBtn("Quit_Btn")->update(currentGameState, gameState::exit, clickedArea);
+			theButtonMgr->getBtn("Play_Btn")->update(clickedArea);
+			if (theButtonMgr->getBtn("Play_Btn")->getClicked())
+			{
+				ResetGame(theRenderer);
+				currentGameState = gameState::gameScene;
+				theButtonMgr->getBtn("Play_Btn")->setClicked(false);
+				clickedArea = { 0,0 };
+			}
+
+			theButtonMgr->getBtn("Instructions_Btn")->update(clickedArea);
+			if (theButtonMgr->getBtn("Instructions_Btn")->getClicked())
+			{
+				currentGameState = gameState::instructions;
+				theButtonMgr->getBtn("Instructions_Btn")->setClicked(false);
+				clickedArea = { 0,0 };
+			}
+			
+			theButtonMgr->getBtn("Quit_Btn")->update(clickedArea);
+			if (theButtonMgr->getBtn("Quit_Btn")->getClicked())
+			{
+				currentGameState = gameState::exit;
+				theButtonMgr->getBtn("Quit_Btn")->setClicked(false);
+				clickedArea = { 0,0 };
+			}
 		}
 		break;
 
 		case (gameState::instructions):
 		{
-			currentGameState = theButtonMgr->getBtn("Menu_Btn")->update(currentGameState, gameState::mainMenu, clickedArea);
+			theButtonMgr->getBtn("Menu_Btn")->update(clickedArea);
+			if (theButtonMgr->getBtn("Menu_Btn")->getClicked())
+			{
+				currentGameState = gameState::mainMenu;
+				theButtonMgr->getBtn("Menu_Btn")->setClicked(false);
+				clickedArea = { 0,0 };
+			}
 		}
 		break;
 
@@ -385,6 +476,56 @@ void cGame::update(double deltaTime, SDL_Renderer* theRenderer)
 			//Flipper Animations
 			leftFlipper.update(deltaTime);
 			rightFlipper.update(deltaTime);
+
+			//Checking lose condition
+			if (ballSprite.getSpritePos().y > (1100))
+			{
+				//Changing Scene
+				currentGameState = gameState::hiScores;
+
+				//Updating HiScores
+				theScoreMgr->SetHiScores(gameScore);
+
+				vector<int> scores = theScoreMgr->GetHiScores();
+
+				theTextureMgr->deleteTexture("score1");
+				string s = "1: " + to_string(scores[0]);
+				theTextureMgr->addTexture("score1", theFontMgr->getFont("scores")->createTextTexture(theRenderer, s.c_str(), textType::solid, { 0,0,0,255 }, { 0,0,0,0 }));
+				theTextureMgr->deleteTexture("score2");
+				s = "2: " + to_string(scores[1]);
+				theTextureMgr->addTexture("score2", theFontMgr->getFont("scores")->createTextTexture(theRenderer, s.c_str(), textType::solid, { 0,0,0,255 }, { 0,0,0,0 }));
+				theTextureMgr->deleteTexture("score3");
+				s = "3: " + to_string(scores[2]);
+				theTextureMgr->addTexture("score3", theFontMgr->getFont("scores")->createTextTexture(theRenderer, s.c_str(), textType::solid, { 0,0,0,255 }, { 0,0,0,0 }));
+				theTextureMgr->deleteTexture("score4");
+				s = "4: " + to_string(scores[3]);
+				theTextureMgr->addTexture("score4", theFontMgr->getFont("scores")->createTextTexture(theRenderer, s.c_str(), textType::solid, { 0,0,0,255 }, { 0,0,0,0 }));
+				theTextureMgr->deleteTexture("score5");
+				s = "5: " + to_string(scores[4]);
+				theTextureMgr->addTexture("score5", theFontMgr->getFont("scores")->createTextTexture(theRenderer, s.c_str(), textType::solid, { 0,0,0,255 }, { 0,0,0,0 }));
+
+			}
+		}
+		break;
+
+		case (gameState::hiScores):
+		{
+			theButtonMgr->getBtn("MainMenu_Btn")->update(clickedArea);
+			if (theButtonMgr->getBtn("MainMenu_Btn")->getClicked())
+			{
+				currentGameState = gameState::mainMenu;
+				theButtonMgr->getBtn("MainMenu_Btn")->setClicked(false);
+				clickedArea = { 0,0 };
+			}
+
+			theButtonMgr->getBtn("Restart_Btn")->update(clickedArea);
+			if (theButtonMgr->getBtn("Restart_Btn")->getClicked())
+			{
+				ResetGame(theRenderer);
+				currentGameState = gameState::gameScene;
+				theButtonMgr->getBtn("Restart_Btn")->setClicked(false);
+				clickedArea = { 0,0 };
+			}
 		}
 		break;
 
@@ -423,63 +564,24 @@ bool cGame::getInput()
 				switch (event.type)
 				{
 
-				case SDL_KEYDOWN:
-				{
-					switch (event.key.keysym.sym)
+					case SDL_KEYDOWN:
 					{
-					//Quitting the Game
-					case SDLK_ESCAPE:
-					{
-						currentGameState = gameState::exit;
-					}
-					break;
+						switch (event.key.keysym.sym)
+						{
+						//Flippers
+						case SDLK_q:
+						{
+							leftFlipper.Activate();
+						}
+						break;
 
-					//Moving the ball
-					case SDLK_w:
-					{
-						ballSprite.addForceToBall(0, -25);
+						case SDLK_e:
+						{
+							rightFlipper.Activate();
+						}
+						break;
+						}
 					}
-					break;
-
-					case SDLK_a:
-					{
-						ballSprite.addForceToBall(-25, 0);
-					}
-					break;
-
-					case SDLK_s:
-					{
-						ballSprite.addForceToBall(0, 25);
-					}
-					break;
-
-					case SDLK_d:
-					{
-						ballSprite.addForceToBall(25, 0);
-					}
-					break;
-
-					//Respawn
-					case SDLK_r:
-					{
-						ballSprite.RespawnBall(250, 400);
-					}
-					break;
-
-					//Flippers
-					case SDLK_q:
-					{
-						leftFlipper.Activate();
-					}
-					break;
-
-					case SDLK_e:
-					{
-						rightFlipper.Activate();
-					}
-					break;
-					}
-				}
 				}
 			}
 			break;
@@ -511,3 +613,14 @@ void cGame::cleanUp(SDL_Window* theSDLWND)
 	SDL_Quit();
 }
 
+void cGame::ResetGame(SDL_Renderer* theRenderer)
+{
+	ballSprite.initialise();
+
+	gameScore = 0;
+	theTextureMgr->deleteTexture("scoreText");
+	string s = "Score: ";
+	s += to_string(gameScore);
+	theTextureMgr->addTexture("scoreText", theFontMgr->getFont("digital")->createTextTexture(theRenderer, s.c_str(), textType::solid, { 255,255,255,255 }, { 0,0,0,0 }));
+
+}
