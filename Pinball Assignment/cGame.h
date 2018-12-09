@@ -26,7 +26,7 @@ public:
 	void render(SDL_Window* theSDLWND, SDL_Renderer* theRenderer, double rotAngle, SDL_Point* spriteCentre);
 	void update();
 	void update(double deltaTime, SDL_Renderer* theRenderer);
-	bool getInput();
+	bool getInput(SDL_Renderer* theRenderer);
 	double getElapsedSeconds();
 	void ResetGame(SDL_Renderer* theRenderer);
 
@@ -46,9 +46,14 @@ private:
 
 	// Main Menu Scene
 	cSprite menuBkgd;
+	cSprite controllerTrue;
+	cSprite controllerFalse;
+	cSprite menuSelector;
+	int selectedMenuButton = 0;
 
 	//Instructions Scene
 	cSprite instructionsBkgd;
+	cSprite instructionsBkgd2;
 
 	// Game Scene
 	int gameScore = 0;
@@ -62,6 +67,8 @@ private:
 
 	//Hi Scores Scene
 	cSprite hiScoresBkgd;
+	cSprite hiScoreSelector;
+	int selectedHiScoreButton = 0;
 };
 
 #endif

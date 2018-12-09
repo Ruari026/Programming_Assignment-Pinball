@@ -65,6 +65,7 @@ void cHiScoreMgr::SetHiScores(int newScore)
 		int savedInt = newScore;
 		for (int i = position; i < scores.size(); i++)
 		{
+
 			int savedCurrent = scores[i];
 			scores[i] = savedInt;
 			savedInt = savedCurrent;

@@ -443,7 +443,7 @@ bool cSprite::CollidedWithPixels(SDL_Point ballPos, vector<SDL_Point> spriteColl
 		}
 	}
 
-	if (collidedPoints.size() > 1)
+	if (collidedPoints.size() > 10)
 	{
 		return true;
 	}

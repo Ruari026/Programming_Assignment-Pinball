@@ -63,8 +63,8 @@ void cBall::CalculateBallVelocity()
 	
 	if (velocityMagnitude > 50)
 	{
-		ballVelocity.X = (ballVelocity.X / velocityMagnitude) * 50;
-		ballVelocity.Y = (ballVelocity.Y / velocityMagnitude) * 50;
+		ballVelocity.X = (ballVelocity.X / velocityMagnitude) * 25;
+		ballVelocity.Y = (ballVelocity.Y / velocityMagnitude) * 25;
 	}
 }
 
@@ -211,7 +211,7 @@ void cBall::CalculateCollisions(vector<SDL_Point> otherCollidablePoints)
 		}
 	}
 
-	if (collisionPoints.size() > 1 && canCollide)
+	if (collisionPoints.size() > 10 && canCollide)
 	{
 		cout << "-Collision-" << endl;
 		cout << "--------------------" << endl;
@@ -307,7 +307,7 @@ void cBall::CalculateCollisions(vector<SDL_Point> otherCollidablePoints)
 
 				float distanceToPixel = sqrt((distanceX*distanceX) + (distanceY*distanceY));
 
-				if (distanceToPixel < 30)
+				if (distanceToPixel < 22)
 				{
 					collisionPoints.push_back(pixelPos);
 				}

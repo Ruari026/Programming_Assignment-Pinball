@@ -9,7 +9,9 @@ cGame* cGame::pInstance = NULL;
 static cTextureMgr* theTextureMgr = cTextureMgr::getInstance();
 static cFontMgr* theFontMgr = cFontMgr::getInstance();
 static cButtonMgr* theButtonMgr = cButtonMgr::getInstance();
-static cHiScoreMgr* theScoreMgr;
+static cHiScoreMgr* theScoreMgr = cHiScoreMgr::getInstance();
+static cInputMgr* theInputMgr = cInputMgr::getInstance();
+static cSoundMgr* theSoundMgr = cSoundMgr::getInstance();
 
 /*
 =================================================================================
@@ -39,6 +41,9 @@ cGame* cGame::getInstance()
 
 void cGame::initialise(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 {
+	cout << "- Initialising Game -" << endl;
+	cout << "--------------------" << endl;
+
 	// Clear the buffer with a black background
 	SDL_SetRenderDrawColor(theRenderer, 0, 0, 0, 255);
 	SDL_RenderPresent(theRenderer);
@@ -47,14 +52,33 @@ void cGame::initialise(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 
 	theTextureMgr->setRenderer(theRenderer);
 	theFontMgr->initFontLib();
+	theSoundMgr->initMixer();
 	
 	//Main Menu Elements
 	{
+		cout << "- Loading Main Menu Items" << endl;
+
 		//Background
-		theTextureMgr->addTexture("menuBackground", "Images\\MainMenu.png");
+		theTextureMgr->addTexture("menuBackground", "Images\\MainMenu\\MainMenu.png");
 		menuBkgd.setSpritePos({ 0, 0 });
 		menuBkgd.setTexture(theTextureMgr->getTexture("menuBackground"));
 		menuBkgd.setSpriteDimensions(theTextureMgr->getTexture("menuBackground")->getTWidth(), theTextureMgr->getTexture("menuBackground")->getTHeight());
+
+		//Controller State
+		theTextureMgr->addTexture("controllerTrue", "Images\\MainMenu\\ConnectionTrue.png");
+		controllerTrue.setSpritePos({ 25, 825 });
+		controllerTrue.setTexture(theTextureMgr->getTexture("controllerTrue"));
+		controllerTrue.setSpriteDimensions(theTextureMgr->getTexture("controllerTrue")->getTWidth(), theTextureMgr->getTexture("controllerTrue")->getTHeight());
+		theTextureMgr->addTexture("controllerFalse", "Images\\MainMenu\\ConnectionFalse.png");
+		controllerFalse.setSpritePos({ 25, 825 });
+		controllerFalse.setTexture(theTextureMgr->getTexture("controllerFalse"));
+		controllerFalse.setSpriteDimensions(theTextureMgr->getTexture("controllerFalse")->getTWidth(), theTextureMgr->getTexture("controllerFalse")->getTHeight());
+
+		//Button Selector
+		theTextureMgr->addTexture("buttonSelector", "Images\\MainMenu\\ButtonSelector.png");
+		menuSelector.setSpritePos({ 150,550 });
+		menuSelector.setTexture(theTextureMgr->getTexture("buttonSelector"));
+		menuSelector.setSpriteDimensions(theTextureMgr->getTexture("buttonSelector")->getTWidth(), theTextureMgr->getTexture("buttonSelector")->getTHeight());
 
 		//Scene Buttons
 		//Game Start Button
@@ -78,15 +102,30 @@ void cGame::initialise(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 		newBtn->setSpritePos({ 225,850 });
 		newBtn->setSpriteDimensions(theTextureMgr->getTexture("menuButton3")->getTWidth(), theTextureMgr->getTexture("menuButton3")->getTHeight());
 		theButtonMgr->add("Quit_Btn", newBtn);
+
+		//Scene Sounds
+		//Background Music
+		theSoundMgr->add("MenuMusic", "Audio\\NewYorkJazzLoop-FoolBoyMedia.wav", soundType::music);
+		//Button Clicks
+		theSoundMgr->add("ButtonClick", "Audio\\UIConfirmation-InspectorJ.wav", soundType::sfx);
+
+		cout << endl;
 	}
 
 	//Instructions & Controls Scene Elements
 	{
+		cout << "- Instructions Scene Items" << endl;
+
 		//Background
 		theTextureMgr->addTexture("instructionsBackground", "Images\\Instructions\\InstructionsDesign.png");
 		instructionsBkgd.setSpritePos({ 0, 0 });
 		instructionsBkgd.setTexture(theTextureMgr->getTexture("instructionsBackground"));
 		instructionsBkgd.setSpriteDimensions(theTextureMgr->getTexture("instructionsBackground")->getTWidth(), theTextureMgr->getTexture("instructionsBackground")->getTHeight());
+		theTextureMgr->addTexture("instructionsBackground2", "Images\\Instructions\\InstructionsDesign2.png");
+		instructionsBkgd2.setSpritePos({ 0, 0 });
+		instructionsBkgd2.setTexture(theTextureMgr->getTexture("instructionsBackground2"));
+		instructionsBkgd2.setSpriteDimensions(theTextureMgr->getTexture("instructionsBackground2")->getTWidth(), theTextureMgr->getTexture("instructionsBackground2")->getTHeight());
+
 
 		//Main Menu Button
 		theTextureMgr->addTexture("button2", "Images\\Instructions\\Button.png");
@@ -95,10 +134,60 @@ void cGame::initialise(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 		newBtn->setSpritePos({ 75,75 });
 		newBtn->setSpriteDimensions(theTextureMgr->getTexture("button2")->getTWidth(), theTextureMgr->getTexture("button2")->getTHeight());
 		theButtonMgr->add("Menu_Btn", newBtn);
+		
+		cout << endl;
+	}
+
+	//Hi Score Scene Elements
+	{
+		cout << "- Hi Score Scene Items" << endl;
+
+		//Scene Background
+		theTextureMgr->addTexture("hiScoresBackground", "Images\\Hi-Scores\\HiScoresDesign.png");
+		hiScoresBkgd.setSpritePos({ 0, 0 });
+		hiScoresBkgd.setTexture(theTextureMgr->getTexture("hiScoresBackground"));
+		hiScoresBkgd.setSpriteDimensions(theTextureMgr->getTexture("hiScoresBackground")->getTWidth(), theTextureMgr->getTexture("hiScoresBackground")->getTHeight());
+
+		//Scene Fonts
+		theFontMgr->addFont("scores", "Fonts\\TCB_____.TTF", 48);
+		theTextureMgr->addTexture("score1", theFontMgr->getFont("scores")->createTextTexture(theRenderer, "1: 0", textType::solid, { 0,0,0,255 }, { 0,0,0,0 }));
+		theTextureMgr->addTexture("score2", theFontMgr->getFont("scores")->createTextTexture(theRenderer, "2: 0", textType::solid, { 0,0,0,255 }, { 0,0,0,0 }));
+		theTextureMgr->addTexture("score3", theFontMgr->getFont("scores")->createTextTexture(theRenderer, "3: 0", textType::solid, { 0,0,0,255 }, { 0,0,0,0 }));
+		theTextureMgr->addTexture("score4", theFontMgr->getFont("scores")->createTextTexture(theRenderer, "4: 0", textType::solid, { 0,0,0,255 }, { 0,0,0,0 }));
+		theTextureMgr->addTexture("score5", theFontMgr->getFont("scores")->createTextTexture(theRenderer, "5: 0", textType::solid, { 0,0,0,255 }, { 0,0,0,0 }));
+
+		//Scene Buttons
+		//Game Restart Button
+		theTextureMgr->addTexture("scoresButton1", "Images\\Hi-Scores\\RestartButton.png");
+		cButton* newBtn = new cButton();
+		newBtn->setTexture(theTextureMgr->getTexture("scoresButton1"));
+		newBtn->setSpritePos({ 75,800 });
+		newBtn->setSpriteDimensions(theTextureMgr->getTexture("scoresButton1")->getTWidth(), theTextureMgr->getTexture("scoresButton1")->getTHeight());
+		theButtonMgr->add("Restart_Btn", newBtn);
+		//Quit to Main Menu Button
+		theTextureMgr->addTexture("scoresButton2", "Images\\Hi-Scores\\MainMenuButton.png");
+		newBtn = new cButton();
+		newBtn->setTexture(theTextureMgr->getTexture("scoresButton2"));
+		newBtn->setSpritePos({ 425,800 });
+		newBtn->setSpriteDimensions(theTextureMgr->getTexture("scoresButton2")->getTWidth(), theTextureMgr->getTexture("scoresButton2")->getTHeight());
+		theButtonMgr->add("MainMenu_Btn", newBtn);
+
+		//Button Selector
+		theTextureMgr->addTexture("buttonSelector2", "Images\\Hi-Scores\\ButtonSelector.png");
+		hiScoreSelector.setSpritePos({ 0,800 });
+		hiScoreSelector.setTexture(theTextureMgr->getTexture("buttonSelector2"));
+		hiScoreSelector.setSpriteDimensions(theTextureMgr->getTexture("buttonSelector2")->getTWidth(), theTextureMgr->getTexture("buttonSelector2")->getTHeight());
+
+		//Scene Music
+		theSoundMgr->add("HiScoreMusic", "Audio\\FunkyTunaGuitar-Abett.wav", soundType::music);
+
+		cout << endl;
 	}
 
 	//Game Scene Elements
 	{
+		cout << "- Game Scene Items" << endl;
+
 		//Game Background
 		theTextureMgr->addTexture("theBackground", "Images\\Background.png");
 		gameBkgd.setSpritePos({ 0, 0 });
@@ -144,13 +233,13 @@ void cGame::initialise(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 		wallSprites[4]->initialise(theSDLWND, theRenderer, "Images\\Corner-R.png");
 		//Left Internal Wall
 		wallSprites.push_back(new cWall);
-		wallSprites[5]->setSpritePos({ 100,700 });
+		wallSprites[5]->setSpritePos({ 100,685 });
 		wallSprites[5]->setTexture(theTextureMgr->getTexture("leftInternal"));
 		wallSprites[5]->setSpriteDimensions(theTextureMgr->getTexture("leftInternal")->getTWidth(), theTextureMgr->getTexture("leftInternal")->getTHeight());
 		wallSprites[5]->initialise(theSDLWND, theRenderer, "Images\\Internal-L.png");
 		//Right Internal Wall
 		wallSprites.push_back(new cWall);
-		wallSprites[6]->setSpritePos({ 620,700 });
+		wallSprites[6]->setSpritePos({ 620,685 });
 		wallSprites[6]->setTexture(theTextureMgr->getTexture("rightInternal"));
 		wallSprites[6]->setSpriteDimensions(theTextureMgr->getTexture("rightInternal")->getTWidth(), theTextureMgr->getTexture("rightInternal")->getTHeight());
 		wallSprites[6]->initialise(theSDLWND, theRenderer, "Images\\Internal-R.png");
@@ -204,45 +293,20 @@ void cGame::initialise(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 		//Score Text
 		theFontMgr->addFont("digital", "Fonts\\DS-DIGIB.TTF", 48);
 		theTextureMgr->addTexture("scoreText", theFontMgr->getFont("digital")->createTextTexture(theRenderer, "Score: 0", textType::solid, { 255,255,255,255 }, { 0,0,0,0 }));
-	}
-
-	//Hi Score Scene Elements
-	{
-		//Scene Background
-		theTextureMgr->addTexture("hiScoresBackground", "Images\\Hi-Scores\\HiScoresDesign.png");
-		hiScoresBkgd.setSpritePos({ 0, 0 });
-		hiScoresBkgd.setTexture(theTextureMgr->getTexture("hiScoresBackground"));
-		hiScoresBkgd.setSpriteDimensions(theTextureMgr->getTexture("hiScoresBackground")->getTWidth(), theTextureMgr->getTexture("hiScoresBackground")->getTHeight());
-
-		//Scene Fonts
-		theFontMgr->addFont("scores", "Fonts\\TCB_____.TTF", 48);
-		theTextureMgr->addTexture("score1", theFontMgr->getFont("scores")->createTextTexture(theRenderer, "1: 0", textType::solid, { 0,0,0,255 }, { 0,0,0,0 }));
-		theTextureMgr->addTexture("score2", theFontMgr->getFont("scores")->createTextTexture(theRenderer, "2: 0", textType::solid, { 0,0,0,255 }, { 0,0,0,0 }));
-		theTextureMgr->addTexture("score3", theFontMgr->getFont("scores")->createTextTexture(theRenderer, "3: 0", textType::solid, { 0,0,0,255 }, { 0,0,0,0 }));
-		theTextureMgr->addTexture("score4", theFontMgr->getFont("scores")->createTextTexture(theRenderer, "4: 0", textType::solid, { 0,0,0,255 }, { 0,0,0,0 }));
-		theTextureMgr->addTexture("score5", theFontMgr->getFont("scores")->createTextTexture(theRenderer, "5: 0", textType::solid, { 0,0,0,255 }, { 0,0,0,0 }));
-
-		
-		//Scene Buttons
-		//Game Restart Button
-		theTextureMgr->addTexture("scoresButton1", "Images\\Hi-Scores\\RestartButton.png");
-		cButton* newBtn = new cButton();
-		newBtn->setTexture(theTextureMgr->getTexture("scoresButton1"));
-		newBtn->setSpritePos({ 75,800 });
-		newBtn->setSpriteDimensions(theTextureMgr->getTexture("scoresButton1")->getTWidth(), theTextureMgr->getTexture("scoresButton1")->getTHeight());
-		theButtonMgr->add("Restart_Btn", newBtn);
-		//Quit to Main Menu Button
-		theTextureMgr->addTexture("scoresButton2", "Images\\Hi-Scores\\MainMenuButton.png");
-		newBtn = new cButton();
-		newBtn->setTexture(theTextureMgr->getTexture("scoresButton2"));
-		newBtn->setSpritePos({ 450,800 });
-		newBtn->setSpriteDimensions(theTextureMgr->getTexture("scoresButton2")->getTWidth(), theTextureMgr->getTexture("scoresButton2")->getTHeight());
-		theButtonMgr->add("MainMenu_Btn", newBtn);
+	
+		//Scene Sounds
+		//Background Music
+		theSoundMgr->add("GameMusic", "Audio\\HeavyDanceLoop-FurbyGuy.wav", soundType::music);
+		//Collision Sound
+		theSoundMgr->add("CollisionBump", "Audio\\Impact-OwlStorm.wav", soundType::sfx);
 	}
 
 	//Setting Starting Scene
 	currentGameState = gameState::mainMenu;
-	
+
+	//Setting Starting Music
+	theSoundMgr->getSnd("MenuMusic")->play(-1);
+	cout << "--------------------" << endl << endl;
 }
 
 void cGame::run(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
@@ -254,7 +318,7 @@ void cGame::run(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 		//We get the time that passed since the last frame
 		double elapsedTime = this->getElapsedSeconds();
 
-		loop = this->getInput();
+		loop = this->getInput(theRenderer);
 		this->update(elapsedTime, theRenderer);
 		this->render(theSDLWND, theRenderer);
 	}
@@ -270,19 +334,43 @@ void cGame::render(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 		{
 			//Background
 			menuBkgd.render(theRenderer, NULL, NULL, menuBkgd.getSpriteScale());
-		
+			
+			//Controller Status
+			if (theInputMgr->GetControllerStatus())
+			{
+				controllerTrue.render(theRenderer, &controllerTrue.getSpriteDimensions(), &controllerTrue.getSpritePos(), controllerTrue.getSpriteScale());
+			}
+			else
+			{
+				controllerFalse.render(theRenderer, &controllerFalse.getSpriteDimensions(), &controllerFalse.getSpritePos(), controllerFalse.getSpriteScale());
+			}
+
 			//Buttons
 			theButtonMgr->getBtn("Play_Btn")->render(theRenderer, &theButtonMgr->getBtn("Play_Btn")->getSpriteDimensions(), &theButtonMgr->getBtn("Play_Btn")->getSpritePos(), theButtonMgr->getBtn("Play_Btn")->getSpriteScale());
 			theButtonMgr->getBtn("Instructions_Btn")->render(theRenderer, &theButtonMgr->getBtn("Instructions_Btn")->getSpriteDimensions(), &theButtonMgr->getBtn("Instructions_Btn")->getSpritePos(), theButtonMgr->getBtn("Instructions_Btn")->getSpriteScale());
 			theButtonMgr->getBtn("Quit_Btn")->render(theRenderer, &theButtonMgr->getBtn("Quit_Btn")->getSpriteDimensions(), &theButtonMgr->getBtn("Quit_Btn")->getSpritePos(), theButtonMgr->getBtn("Quit_Btn")->getSpriteScale());
+			
+			if (theInputMgr->GetControllerStatus())
+			{
+				menuSelector.setSpritePos({ 150,(550 + (selectedMenuButton * 150)) });
+				menuSelector.render(theRenderer, &menuSelector.getSpriteDimensions(), &menuSelector.getSpritePos(), menuSelector.getSpriteScale());
+			}
 		}
 		break;
 
 		case (gameState::instructions):
 		{
 			//Background
-			instructionsBkgd.render(theRenderer, NULL, NULL, instructionsBkgd.getSpriteScale());
-	
+			if (theInputMgr->GetControllerStatus())
+			{
+				//Gamepad Controls
+				instructionsBkgd2.render(theRenderer, NULL, NULL, instructionsBkgd2.getSpriteScale());
+			}
+			else
+			{
+				//Keyboard Controls
+				instructionsBkgd.render(theRenderer, NULL, NULL, instructionsBkgd.getSpriteScale());
+			}
 			//Buttons
 			theButtonMgr->getBtn("Menu_Btn")->render(theRenderer, &theButtonMgr->getBtn("Menu_Btn")->getSpriteDimensions(), &theButtonMgr->getBtn("Menu_Btn")->getSpritePos(), theButtonMgr->getBtn("Menu_Btn")->getSpriteScale());
 		}
@@ -324,15 +412,19 @@ void cGame::render(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 			cTexture* tempTexture = theTextureMgr->getTexture("score1");
 			SDL_Rect pos = { (WINDOW_WIDTH / 2) - (tempTexture->getTWidth() / 2), 190, tempTexture->getTextureRect().w, tempTexture->getTextureRect().h };
 			tempTexture->renderTexture(theRenderer, tempTexture->getTexture(), &tempTexture->getTextureRect(), &pos, { 10,10 });
+			
 			tempTexture = theTextureMgr->getTexture("score2");
 			pos = { (WINDOW_WIDTH / 2) - (tempTexture->getTWidth() / 2), 290, tempTexture->getTextureRect().w, tempTexture->getTextureRect().h };
 			tempTexture->renderTexture(theRenderer, tempTexture->getTexture(), &tempTexture->getTextureRect(), &pos, { 10,10 });
+			
 			tempTexture = theTextureMgr->getTexture("score3");
 			pos = { (WINDOW_WIDTH / 2) - (tempTexture->getTWidth() / 2), 390, tempTexture->getTextureRect().w, tempTexture->getTextureRect().h };
 			tempTexture->renderTexture(theRenderer, tempTexture->getTexture(), &tempTexture->getTextureRect(), &pos, { 10,10 });
+			
 			tempTexture = theTextureMgr->getTexture("score4");
 			pos = { (WINDOW_WIDTH / 2) - (tempTexture->getTWidth() / 2), 490, tempTexture->getTextureRect().w, tempTexture->getTextureRect().h };
 			tempTexture->renderTexture(theRenderer, tempTexture->getTexture(), &tempTexture->getTextureRect(), &pos, { 10,10 });
+			
 			tempTexture = theTextureMgr->getTexture("score5");
 			pos = { (WINDOW_WIDTH / 2) - (tempTexture->getTWidth() / 2), 590, tempTexture->getTextureRect().w, tempTexture->getTextureRect().h };
 			tempTexture->renderTexture(theRenderer, tempTexture->getTexture(), &tempTexture->getTextureRect(), &pos, { 10,10 });
@@ -340,6 +432,12 @@ void cGame::render(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 			//Buttons
 			theButtonMgr->getBtn("Restart_Btn")->render(theRenderer, &theButtonMgr->getBtn("Restart_Btn")->getSpriteDimensions(), &theButtonMgr->getBtn("Restart_Btn")->getSpritePos(), theButtonMgr->getBtn("Restart_Btn")->getSpriteScale());
 			theButtonMgr->getBtn("MainMenu_Btn")->render(theRenderer, &theButtonMgr->getBtn("MainMenu_Btn")->getSpriteDimensions(), &theButtonMgr->getBtn("MainMenu_Btn")->getSpritePos(), theButtonMgr->getBtn("MainMenu_Btn")->getSpriteScale());
+		
+			if (theInputMgr->GetControllerStatus())
+			{
+				hiScoreSelector.setSpritePos({ (0 + (350 * selectedHiScoreButton)), 800 });
+				hiScoreSelector.render(theRenderer, &hiScoreSelector.getSpriteDimensions(), &hiScoreSelector.getSpritePos(), hiScoreSelector.getSpriteScale());
+			}
 		}
 		break;
 	}
@@ -369,6 +467,9 @@ void cGame::update(double deltaTime, SDL_Renderer* theRenderer)
 				ResetGame(theRenderer);
 				currentGameState = gameState::gameScene;
 				theButtonMgr->getBtn("Play_Btn")->setClicked(false);
+				theSoundMgr->getSnd("ButtonClick")->play(0);
+				theSoundMgr->getSnd("MenuMusic")->stop();
+				//theSoundMgr->getSnd("GameMusic")->play(-1);
 				clickedArea = { 0,0 };
 			}
 
@@ -377,6 +478,7 @@ void cGame::update(double deltaTime, SDL_Renderer* theRenderer)
 			{
 				currentGameState = gameState::instructions;
 				theButtonMgr->getBtn("Instructions_Btn")->setClicked(false);
+				theSoundMgr->getSnd("ButtonClick")->play(0);
 				clickedArea = { 0,0 };
 			}
 			
@@ -385,6 +487,7 @@ void cGame::update(double deltaTime, SDL_Renderer* theRenderer)
 			{
 				currentGameState = gameState::exit;
 				theButtonMgr->getBtn("Quit_Btn")->setClicked(false);
+				theSoundMgr->getSnd("ButtonClick")->play(0);
 				clickedArea = { 0,0 };
 			}
 		}
@@ -397,6 +500,7 @@ void cGame::update(double deltaTime, SDL_Renderer* theRenderer)
 			{
 				currentGameState = gameState::mainMenu;
 				theButtonMgr->getBtn("Menu_Btn")->setClicked(false);
+				theSoundMgr->getSnd("ButtonClick")->play(0);
 				clickedArea = { 0,0 };
 			}
 		}
@@ -420,6 +524,7 @@ void cGame::update(double deltaTime, SDL_Renderer* theRenderer)
 					{
 						//Collision Reflection
 						ballSprite.CalculateCollisions(wallSprites[w]->GetCollisionPoints());
+
 					}
 				}
 			}
@@ -434,6 +539,7 @@ void cGame::update(double deltaTime, SDL_Renderer* theRenderer)
 				{
 					ballSprite.addForceToBall(10, -30);
 				}
+
 			}
 			if (ballSprite.CollidedWithPixels({ (ballSprite.getSpritePos().x + ballSprite.getSpriteCentre().x),(ballSprite.getSpritePos().y + ballSprite.getSpriteCentre().y) }, rightFlipper.GetCollisionPoints()))
 			{
@@ -445,6 +551,7 @@ void cGame::update(double deltaTime, SDL_Renderer* theRenderer)
 				{
 					ballSprite.addForceToBall(-5, -30);
 				}
+
 			}
 
 			//Collisions with the Bumpers
@@ -465,6 +572,7 @@ void cGame::update(double deltaTime, SDL_Renderer* theRenderer)
 						string s = "Score: ";
 						s += to_string(gameScore);
 						theTextureMgr->addTexture("scoreText", theFontMgr->getFont("digital")->createTextTexture(theRenderer, s.c_str(), textType::solid, { 255,255,255,255 }, { 0,0,0,0 }));
+
 					}
 				}
 			}
@@ -491,19 +599,28 @@ void cGame::update(double deltaTime, SDL_Renderer* theRenderer)
 				theTextureMgr->deleteTexture("score1");
 				string s = "1: " + to_string(scores[0]);
 				theTextureMgr->addTexture("score1", theFontMgr->getFont("scores")->createTextTexture(theRenderer, s.c_str(), textType::solid, { 0,0,0,255 }, { 0,0,0,0 }));
+				
 				theTextureMgr->deleteTexture("score2");
 				s = "2: " + to_string(scores[1]);
 				theTextureMgr->addTexture("score2", theFontMgr->getFont("scores")->createTextTexture(theRenderer, s.c_str(), textType::solid, { 0,0,0,255 }, { 0,0,0,0 }));
+				
 				theTextureMgr->deleteTexture("score3");
 				s = "3: " + to_string(scores[2]);
 				theTextureMgr->addTexture("score3", theFontMgr->getFont("scores")->createTextTexture(theRenderer, s.c_str(), textType::solid, { 0,0,0,255 }, { 0,0,0,0 }));
+				
 				theTextureMgr->deleteTexture("score4");
 				s = "4: " + to_string(scores[3]);
 				theTextureMgr->addTexture("score4", theFontMgr->getFont("scores")->createTextTexture(theRenderer, s.c_str(), textType::solid, { 0,0,0,255 }, { 0,0,0,0 }));
+				
 				theTextureMgr->deleteTexture("score5");
 				s = "5: " + to_string(scores[4]);
 				theTextureMgr->addTexture("score5", theFontMgr->getFont("scores")->createTextTexture(theRenderer, s.c_str(), textType::solid, { 0,0,0,255 }, { 0,0,0,0 }));
 
+				selectedHiScoreButton = 0;
+
+				//Changing Music
+				theSoundMgr->getSnd("GameMusic")->stop();
+				theSoundMgr->getSnd("HiScoreMusic")->play(-1);
 			}
 		}
 		break;
@@ -515,6 +632,8 @@ void cGame::update(double deltaTime, SDL_Renderer* theRenderer)
 			{
 				currentGameState = gameState::mainMenu;
 				theButtonMgr->getBtn("MainMenu_Btn")->setClicked(false);
+				theSoundMgr->getSnd("ButtonClick")->play(0);
+				theSoundMgr->getSnd("MenuMusic")->play(-1);
 				clickedArea = { 0,0 };
 			}
 
@@ -524,6 +643,8 @@ void cGame::update(double deltaTime, SDL_Renderer* theRenderer)
 				ResetGame(theRenderer);
 				currentGameState = gameState::gameScene;
 				theButtonMgr->getBtn("Restart_Btn")->setClicked(false);
+				theSoundMgr->getSnd("HiScoreMusic")->stop();
+				theSoundMgr->getSnd("ButtonClick")->play(0);
 				clickedArea = { 0,0 };
 			}
 		}
@@ -535,12 +656,15 @@ void cGame::update(double deltaTime, SDL_Renderer* theRenderer)
 		}
 		break;
 	}
+
+	theInputMgr->CheckControllerStatus();
+	theInputMgr->InputDelayTimer(deltaTime);
 }
 
-bool cGame::getInput()
+bool cGame::getInput(SDL_Renderer* theRenderer)
 {
+	//Keyboard Inputs
 	SDL_Event event;
-
 	while (SDL_PollEvent(&event))
 	{
 		if (event.type == SDL_QUIT)
@@ -561,9 +685,9 @@ bool cGame::getInput()
 		{
 			case (gameState::gameScene):
 			{
+				//Keyboard Inputs
 				switch (event.type)
 				{
-
 					case SDL_KEYDOWN:
 					{
 						switch (event.key.keysym.sym)
@@ -587,6 +711,148 @@ bool cGame::getInput()
 			break;
 		}
 	}
+
+	//Checking Gamepad Inputs
+	switch (currentGameState)
+	{
+		case (gameState::mainMenu):
+		{
+			if (theInputMgr->Gamepad_Up())
+			{
+				selectedMenuButton--;
+
+				if (selectedMenuButton < 0)
+				{
+					selectedMenuButton = 2;
+				}
+			}
+
+			if (theInputMgr->Gamepad_Down())
+			{
+				selectedMenuButton++;
+
+				if (selectedMenuButton > 2)
+				{
+					selectedMenuButton = 0;
+				}
+			}
+
+			if (theInputMgr->Gamepad_A())
+			{
+				switch (selectedMenuButton)
+				{
+					case (0):
+					{
+						ResetGame(theRenderer);
+						currentGameState = gameState::gameScene;
+						theButtonMgr->getBtn("Play_Btn")->setClicked(false);
+						theSoundMgr->getSnd("ButtonClick")->play(0);
+						theSoundMgr->getSnd("MenuMusic")->stop();
+						//theSoundMgr->getSnd("GameMusic")->play(-1);
+						clickedArea = { 0,0 };
+					}
+					break;
+
+					case (1):
+					{
+						currentGameState = gameState::instructions;
+						theButtonMgr->getBtn("Instructions_Btn")->setClicked(false);
+						theSoundMgr->getSnd("ButtonClick")->play(0);
+						clickedArea = { 0,0 };
+					}
+					break;
+
+					case (2):
+					{
+						currentGameState = gameState::exit;
+						theButtonMgr->getBtn("Quit_Btn")->setClicked(false);
+						theSoundMgr->getSnd("ButtonClick")->play(0);
+						clickedArea = { 0,0 };
+					}
+					break;
+				}
+			}
+		}
+		break;
+
+		case (gameState::instructions):
+		{
+			if (theInputMgr->Gamepad_A())
+			{
+				currentGameState = gameState::mainMenu;
+				theButtonMgr->getBtn("Menu_Btn")->setClicked(false);
+				theSoundMgr->getSnd("ButtonClick")->play(0);
+				clickedArea = { 0,0 };
+			}
+		}
+		break;
+
+		case (gameState::gameScene):
+		{
+			if (theInputMgr->Gamepad_RightBumper())
+			{
+				rightFlipper.Activate();
+			}
+
+			if (theInputMgr->Gamepad_LeftBumper())
+			{
+				leftFlipper.Activate();
+			}
+		}
+		break;
+
+		case (gameState::hiScores):
+		{
+			if (theInputMgr->Gamepad_Left())
+			{
+				selectedHiScoreButton--;
+
+				if (selectedHiScoreButton < 0)
+				{
+					selectedHiScoreButton = 1;
+				}
+			}
+
+			if (theInputMgr->Gamepad_Right())
+			{
+				selectedHiScoreButton++;
+
+				if (selectedHiScoreButton > 1)
+				{
+					selectedHiScoreButton = 0;
+				}
+			}
+
+			if (theInputMgr->Gamepad_A())
+			{
+				switch (selectedHiScoreButton)
+				{
+					case (0):
+					{
+						ResetGame(theRenderer);
+						currentGameState = gameState::gameScene;
+						theButtonMgr->getBtn("Restart_Btn")->setClicked(false);
+						theSoundMgr->getSnd("HiScoreMusic")->stop();
+						theSoundMgr->getSnd("ButtonClick")->play(0);
+						selectedMenuButton = 0;
+					}
+					break;
+
+					case (1):
+					{
+						currentGameState = gameState::mainMenu;
+						theButtonMgr->getBtn("MainMenu_Btn")->setClicked(false);
+						theSoundMgr->getSnd("ButtonClick")->play(0);
+						theSoundMgr->getSnd("MenuMusic")->play(-1);
+
+					}
+					break;
+				}
+			}
+		}
+		break;
+	}
+
 	return loop;
 }
 
