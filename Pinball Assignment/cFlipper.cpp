@@ -90,6 +90,11 @@ void cFlipper::SetFlipperRotationPoint(SDL_Point newRotationPoint)
 	flipperRotationPoint.y = newRotationPoint.y;
 }
 
+SDL_Point cFlipper::GetFlipperRotationPoint()
+{
+	return this->flipperRotationPoint;
+}
+
 void cFlipper::SetFlipperRotation(float rotationAmount)
 {
 	flipperRotAngle = rotationAmount;

@@ -52,27 +52,21 @@ void cBall::update(double deltaTime)
 */
 void cBall::CalculateBallVelocity()
 {
-	float gravity = 2; //Only Acts On the Y Axis
+	float gravity = -2; //Only Acts On the Y Axis
 	float timeStep = 0.5f;
-	float airResistance = 0.025f; //Acts On The X and Y Axis
+	float airResistance = 0.02f; //Acts On The X and Y Axis
 
 	ballVelocity.X = ((ballVelocity.X) / (-1 * airResistance)) * (-1 * airResistance) * exp(-1 * airResistance*timeStep);
-	ballVelocity.Y = (gravity * timeStep) + ballVelocity.Y;
+	ballVelocity.Y = (-1 * airResistance) * (((ballVelocity.Y) + (gravity / airResistance)) / (-1 * airResistance)) * exp((-1 * airResistance * timeStep)) - ((gravity) / (airResistance));
 
 	float velocityMagnitude = sqrt((ballVelocity.X * ballVelocity.X) + (ballVelocity.Y * ballVelocity.Y));
-	
-	if (velocityMagnitude > 50)
-	{
-		ballVelocity.X = (ballVelocity.X / velocityMagnitude) * 25;
-		ballVelocity.Y = (ballVelocity.Y / velocityMagnitude) * 25;
-	}
 }
 
 void cBall::CalculateBallPosition()
 {
 	float gravity = 2; //Only Acts on the Y Axis
 	float timeStep = 0.5f;
-	float airResistance = 0.025f; //Acts On The X and Y Axis
+	float airResistance = 0.02f; //Acts On The X and Y Axis
 
 	ballPositionX = (ballPositionX - (ballVelocity.X / (-1 * airResistance))) + (ballVelocity.X / (-1 * airResistance))*exp(-1 * airResistance * timeStep);
 	ballPositionY = ((gravity * timeStep) / 2) + (ballVelocity.Y * timeStep) + ballPositionY;

@@ -35,6 +35,7 @@ public:
 	void SetFlipperRotation(float rotationAmount);
 	float GetFlipperRotation();
 	void SetFlipperRotationPoint(SDL_Point);
+	SDL_Point GetFlipperRotationPoint();
 	void RotateCollisionPoints(float rotationAmount);
 	vector<SDL_Point> GetRotatedCollisionPoints();
 	SDL_Point RotateAroundPoint(SDL_Point pointToRotate, SDL_Point pointAround, float rotationAmount);

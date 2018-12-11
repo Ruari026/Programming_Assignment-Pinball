@@ -296,9 +296,7 @@ void cGame::initialise(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 	
 		//Scene Sounds
 		//Background Music
-		theSoundMgr->add("GameMusic", "Audio\\HeavyDanceLoop-FurbyGuy.wav", soundType::music);
-		//Collision Sound
-		theSoundMgr->add("CollisionBump", "Audio\\Impact-OwlStorm.wav", soundType::sfx);
+		theSoundMgr->add("GameMusic", "Audio\\VintageElectroPopLoop-Frankum.mp3", soundType::music);
 	}
 
 	//Setting Starting Scene
@@ -469,7 +467,7 @@ void cGame::update(double deltaTime, SDL_Renderer* theRenderer)
 				theButtonMgr->getBtn("Play_Btn")->setClicked(false);
 				theSoundMgr->getSnd("ButtonClick")->play(0);
 				theSoundMgr->getSnd("MenuMusic")->stop();
-				//theSoundMgr->getSnd("GameMusic")->play(-1);
+				theSoundMgr->getSnd("GameMusic")->play(-1);
 				clickedArea = { 0,0 };
 			}
 
@@ -537,7 +535,12 @@ void cGame::update(double deltaTime, SDL_Renderer* theRenderer)
 				//Force Addition
 				if (leftFlipper.GetAnimationState())
 				{
-					ballSprite.addForceToBall(10, -30);
+					SDL_Point flipperRotPoint = leftFlipper.GetFlipperRotationPoint();
+					SDL_Point ballCenterPos = { (ballSprite.getSpritePos().x + ballSprite.getSpriteCentre().x),(ballSprite.getSpritePos().y + ballSprite.getSpriteCentre().y) };
+
+					float forceMagnitude = sqrt(((flipperRotPoint.x - ballCenterPos.x)*(flipperRotPoint.x - ballCenterPos.x)) + ((flipperRotPoint.y - ballCenterPos.y)*(flipperRotPoint.y - ballCenterPos.y)));
+					forceMagnitude /= 25;
+					ballSprite.addForceToBall((1 * forceMagnitude), (-4 * forceMagnitude));
 				}
 
 			}
@@ -549,7 +552,12 @@ void cGame::update(double deltaTime, SDL_Renderer* theRenderer)
 				//Force Addition
 				if (rightFlipper.GetAnimationState())
 				{
-					ballSprite.addForceToBall(-5, -30);
+					SDL_Point flipperRotPoint = rightFlipper.GetFlipperRotationPoint();
+					SDL_Point ballCenterPos = { (ballSprite.getSpritePos().x + ballSprite.getSpriteCentre().x),(ballSprite.getSpritePos().y + ballSprite.getSpriteCentre().y) };
+
+					float forceMagnitude = sqrt(((flipperRotPoint.x - ballCenterPos.x)*(flipperRotPoint.x - ballCenterPos.x))+((flipperRotPoint.y - ballCenterPos.y)*(flipperRotPoint.y - ballCenterPos.y)));
+					forceMagnitude /= 25;
+					ballSprite.addForceToBall((-1 * forceMagnitude), (-4 * forceMagnitude));
 				}
 
 			}
@@ -645,6 +653,7 @@ void cGame::update(double deltaTime, SDL_Renderer* theRenderer)
 				theButtonMgr->getBtn("Restart_Btn")->setClicked(false);
 				theSoundMgr->getSnd("HiScoreMusic")->stop();
 				theSoundMgr->getSnd("ButtonClick")->play(0);
+				theSoundMgr->getSnd("GameMusic")->play(-1);
 				clickedArea = { 0,0 };
 			}
 		}
@@ -748,7 +757,7 @@ bool cGame::getInput(SDL_Renderer* theRenderer)
 						theButtonMgr->getBtn("Play_Btn")->setClicked(false);
 						theSoundMgr->getSnd("ButtonClick")->play(0);
 						theSoundMgr->getSnd("MenuMusic")->stop();
-						//theSoundMgr->getSnd("GameMusic")->play(-1);
+						theSoundMgr->getSnd("GameMusic")->play(-1);
 						clickedArea = { 0,0 };
 					}
 					break;
@@ -834,6 +843,7 @@ bool cGame::getInput(SDL_Renderer* theRenderer)
 						theButtonMgr->getBtn("Restart_Btn")->setClicked(false);
 						theSoundMgr->getSnd("HiScoreMusic")->stop();
 						theSoundMgr->getSnd("ButtonClick")->play(0);
+						theSoundMgr->getSnd("GameMusic")->play(-1);
 						selectedMenuButton = 0;
 					}
 					break;
