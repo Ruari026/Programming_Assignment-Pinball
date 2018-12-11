@@ -91,6 +91,12 @@
     <Link>
       <SubSystem>Console</SubSystem>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /Y "$(ProjectDir)Audio\*.*" "$(OutDir)Audio\"
+xcopy /Y "$(ProjectDir)Images\*.*" "$(OutDir)Images\"
+xcopy /Y "$(ProjectDir)Data\*.*" "$(OutDir)Data\"
+xcopy /Y "$(ProjectDir)Fonts\*.*" "$(OutDir)Fonts\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -119,8 +125,14 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /Y "$(ProjectDir)Audio\*.*" "$(OutDir)Audio\"
+xcopy /Y "$(ProjectDir)Images\*.*" "$(OutDir)Images\"
+xcopy /Y "$(ProjectDir)Data\*.*" "$(OutDir)Data\"
+xcopy /Y "$(ProjectDir)Fonts\*.*" "$(OutDir)Fonts\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cBkGround.h" />
@@ -146,9 +158,6 @@
     <ClInclude Include="pinballGame.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\Pinball Assignment.rc" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cBkGround.cpp" />
     <ClCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cBumper.cpp" />
     <ClCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cButton.cpp" />
@@ -170,6 +179,7 @@
     <ClCompile Include="PinballSDL.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\ClassDiagram.cd" />
     <None Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

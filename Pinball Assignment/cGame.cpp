@@ -188,7 +188,7 @@ void cGame::initialise(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 	{
 		cout << "- Game Scene Items" << endl;
 
-		//Game Background
+		//Game Background...................................................................................
 		theTextureMgr->addTexture("theBackground", "Images\\Background.png");
 		gameBkgd.setSpritePos({ 0, 0 });
 		gameBkgd.setTexture(theTextureMgr->getTexture("theBackground"));

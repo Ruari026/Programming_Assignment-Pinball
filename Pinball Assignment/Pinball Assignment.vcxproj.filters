@@ -80,11 +80,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\Pinball Assignment.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cBkGround.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -145,5 +140,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\packages.config" />
+    <None Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\ClassDiagram.cd" />
   </ItemGroup>
 </Project>
