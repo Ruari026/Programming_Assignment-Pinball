@@ -205,7 +205,7 @@ void cBall::CalculateCollisions(vector<SDL_Point> otherCollidablePoints)
 		}
 	}
 
-	if (collisionPoints.size() > 10 && canCollide)
+	if (collisionPoints.size() > 1 && canCollide)
 	{
 		cout << "-Collision-" << endl;
 		cout << "--------------------" << endl;
@@ -301,7 +301,7 @@ void cBall::CalculateCollisions(vector<SDL_Point> otherCollidablePoints)
 
 				float distanceToPixel = sqrt((distanceX*distanceX) + (distanceY*distanceY));
 
-				if (distanceToPixel < 22)
+				if (distanceToPixel < 25)
 				{
 					collisionPoints.push_back(pixelPos);
 				}

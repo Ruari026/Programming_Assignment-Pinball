@@ -92,10 +92,10 @@
       <SubSystem>Console</SubSystem>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y "$(ProjectDir)Audio\*.*" "$(OutDir)Audio\"
-xcopy /Y "$(ProjectDir)Images\*.*" "$(OutDir)Images\"
-xcopy /Y "$(ProjectDir)Data\*.*" "$(OutDir)Data\"
-xcopy /Y "$(ProjectDir)Fonts\*.*" "$(OutDir)Fonts\"</Command>
+      <Command>xcopy /Y/S "$(ProjectDir)Audio\*.*" "$(OutDir)Audio\"
+xcopy /Y/S "$(ProjectDir)Images\*.*" "$(OutDir)Images\"
+xcopy /Y/S "$(ProjectDir)Data\*.*" "$(OutDir)Data\"
+xcopy /Y/S "$(ProjectDir)Fonts\*.*" "$(OutDir)Fonts\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -128,14 +128,13 @@ xcopy /Y "$(ProjectDir)Fonts\*.*" "$(OutDir)Fonts\"</Command>
       <SubSystem>Windows</SubSystem>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y "$(ProjectDir)Audio\*.*" "$(OutDir)Audio\"
-xcopy /Y "$(ProjectDir)Images\*.*" "$(OutDir)Images\"
-xcopy /Y "$(ProjectDir)Data\*.*" "$(OutDir)Data\"
-xcopy /Y "$(ProjectDir)Fonts\*.*" "$(OutDir)Fonts\"</Command>
+      <Command>xcopy /Y/S "$(ProjectDir)Audio\*.*" "$(OutDir)Audio\"
+xcopy /Y/S "$(ProjectDir)Images\*.*" "$(OutDir)Images\"
+xcopy /Y/S "$(ProjectDir)Data\*.*" "$(OutDir)Data\"
+xcopy /Y/S "$(ProjectDir)Fonts\*.*" "$(OutDir)Fonts\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cBkGround.h" />
     <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cBumper.h" />
     <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cButton.h" />
     <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cButtonMgr.h" />
@@ -149,7 +148,6 @@ xcopy /Y "$(ProjectDir)Fonts\*.*" "$(OutDir)Fonts\"</Command>
     <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cSoundMgr.h" />
     <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cWall.h" />
     <ClInclude Include="cBall.h" />
-    <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cSDL2WNDManager.h" />
     <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cSprite.h" />
     <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cTexture.h" />
     <ClInclude Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cTextureMgr.h" />
@@ -158,7 +156,6 @@ xcopy /Y "$(ProjectDir)Fonts\*.*" "$(OutDir)Fonts\"</Command>
     <ClInclude Include="pinballGame.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cBkGround.cpp" />
     <ClCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cBumper.cpp" />
     <ClCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cButton.cpp" />
     <ClCompile Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\cButtonMgr.cpp" />

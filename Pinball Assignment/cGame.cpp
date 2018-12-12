@@ -13,6 +13,7 @@ static cHiScoreMgr* theScoreMgr = cHiScoreMgr::getInstance();
 static cInputMgr* theInputMgr = cInputMgr::getInstance();
 static cSoundMgr* theSoundMgr = cSoundMgr::getInstance();
 
+
 /*
 =================================================================================
 Constructor
@@ -20,7 +21,7 @@ Constructor
 */
 cGame::cGame()
 {
-
+	
 }
 
 
@@ -188,7 +189,7 @@ void cGame::initialise(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 	{
 		cout << "- Game Scene Items" << endl;
 
-		//Game Background...................................................................................
+		//Game Background
 		theTextureMgr->addTexture("theBackground", "Images\\Background.png");
 		gameBkgd.setSpritePos({ 0, 0 });
 		gameBkgd.setTexture(theTextureMgr->getTexture("theBackground"));
@@ -439,7 +440,7 @@ void cGame::render(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 		}
 		break;
 	}
-	
+
 	SDL_RenderPresent(theRenderer);
 }
 
@@ -513,19 +514,6 @@ void cGame::update(double deltaTime, SDL_Renderer* theRenderer)
 			ballSprite.canCollide = true;
 			ballSprite.SetBoundingRect();
 
-			//Collisions with the walls
-			for (int w = 0; w < wallSprites.size(); w++)
-			{
-				if (ballSprite.CollidedWithBox(&ballSprite.GetBoundingRect(), &wallSprites[w]->GetBoundingRect()))
-				{
-					if (ballSprite.CollidedWithPixels({ (ballSprite.getSpritePos().x + ballSprite.getSpriteCentre().x),(ballSprite.getSpritePos().y + ballSprite.getSpriteCentre().y) }, wallSprites[w]->GetCollisionPoints()))
-					{
-						//Collision Reflection
-						ballSprite.CalculateCollisions(wallSprites[w]->GetCollisionPoints());
-
-					}
-				}
-			}
 			//Collisions with the Flippers
 			if (ballSprite.CollidedWithPixels({ (ballSprite.getSpritePos().x + ballSprite.getSpriteCentre().x),(ballSprite.getSpritePos().y + ballSprite.getSpriteCentre().y) }, leftFlipper.GetCollisionPoints()))
 			{
@@ -541,6 +529,8 @@ void cGame::update(double deltaTime, SDL_Renderer* theRenderer)
 					float forceMagnitude = sqrt(((flipperRotPoint.x - ballCenterPos.x)*(flipperRotPoint.x - ballCenterPos.x)) + ((flipperRotPoint.y - ballCenterPos.y)*(flipperRotPoint.y - ballCenterPos.y)));
 					forceMagnitude /= 25;
 					ballSprite.addForceToBall((1 * forceMagnitude), (-4 * forceMagnitude));
+
+					
 				}
 
 			}
@@ -555,13 +545,27 @@ void cGame::update(double deltaTime, SDL_Renderer* theRenderer)
 					SDL_Point flipperRotPoint = rightFlipper.GetFlipperRotationPoint();
 					SDL_Point ballCenterPos = { (ballSprite.getSpritePos().x + ballSprite.getSpriteCentre().x),(ballSprite.getSpritePos().y + ballSprite.getSpriteCentre().y) };
 
-					float forceMagnitude = sqrt(((flipperRotPoint.x - ballCenterPos.x)*(flipperRotPoint.x - ballCenterPos.x))+((flipperRotPoint.y - ballCenterPos.y)*(flipperRotPoint.y - ballCenterPos.y)));
+					float forceMagnitude = sqrt(((flipperRotPoint.x - ballCenterPos.x)*(flipperRotPoint.x - ballCenterPos.x)) + ((flipperRotPoint.y - ballCenterPos.y)*(flipperRotPoint.y - ballCenterPos.y)));
 					forceMagnitude /= 25;
 					ballSprite.addForceToBall((-1 * forceMagnitude), (-4 * forceMagnitude));
 				}
 
 			}
 
+			//Collisions with the walls
+			for (int w = 0; w < wallSprites.size(); w++)
+			{
+				if (ballSprite.CollidedWithBox(&ballSprite.GetBoundingRect(), &wallSprites[w]->GetBoundingRect()))
+				{
+					if (ballSprite.CollidedWithPixels({ (ballSprite.getSpritePos().x + ballSprite.getSpriteCentre().x),(ballSprite.getSpritePos().y + ballSprite.getSpriteCentre().y) }, wallSprites[w]->GetCollisionPoints()))
+					{
+						//Collision Reflection
+						ballSprite.CalculateCollisions(wallSprites[w]->GetCollisionPoints());
+
+					}
+				}
+			}
+			
 			//Collisions with the Bumpers
 			for (int b = 0; b < bumperSprites.size(); b++)
 			{
@@ -672,6 +676,7 @@ void cGame::update(double deltaTime, SDL_Renderer* theRenderer)
 
 bool cGame::getInput(SDL_Renderer* theRenderer)
 {
+
 	//Keyboard Inputs
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
@@ -889,14 +894,13 @@ void cGame::cleanUp(SDL_Window* theSDLWND)
 	SDL_Quit();
 }
 
+
 void cGame::ResetGame(SDL_Renderer* theRenderer)
 {
-	ballSprite.initialise();
-
 	gameScore = 0;
+
 	theTextureMgr->deleteTexture("scoreText");
 	string s = "Score: ";
 	s += to_string(gameScore);
 	theTextureMgr->addTexture("scoreText", theFontMgr->getFont("digital")->createTextTexture(theRenderer, s.c_str(), textType::solid, { 255,255,255,255 }, { 0,0,0,0 }));
-
 }
