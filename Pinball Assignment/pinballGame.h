@@ -18,5 +18,7 @@
 #include "cSound.h"
 #include "cHiScoreMgr.h"
 #include "cInputMgr.h"
+#include "cSceneMgr.h"
+#include "cScene.h"
 
 #endif

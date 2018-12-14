@@ -27,7 +27,7 @@ private:
 	// Texture width & Height
 	int textureWidth;
 	int textureHeight;
-
+	 
 	//Collision Detection
 	//Box Collision
 	SDL_Rect boxCollider;
