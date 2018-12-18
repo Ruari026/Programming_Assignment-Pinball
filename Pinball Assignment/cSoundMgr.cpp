@@ -86,3 +86,24 @@ cSoundMgr::~cSoundMgr()
 	Mix_CloseAudio();
 	Mix_Quit();
 }
+
+bool cSoundMgr::isMuted()
+{
+	return this->muted;
+}
+
+void cSoundMgr::setMuted(bool newState)
+{
+	muted = newState;
+
+	if (muted)
+	{
+		Mix_Volume(-1,0);
+		Mix_VolumeMusic(0);
+	}
+	else
+	{
+		Mix_Volume(-1,128);
+		Mix_VolumeMusic(128);
+	}
+}

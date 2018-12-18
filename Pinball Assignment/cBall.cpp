@@ -60,6 +60,13 @@ void cBall::CalculateBallVelocity()
 	ballVelocity.Y = (-1 * airResistance) * (((ballVelocity.Y) + (gravity / airResistance)) / (-1 * airResistance)) * exp((-1 * airResistance * timeStep)) - ((gravity) / (airResistance));
 
 	float velocityMagnitude = sqrt((ballVelocity.X * ballVelocity.X) + (ballVelocity.Y * ballVelocity.Y));
+
+	//Limiting the ball's velocity
+	if (velocityMagnitude > 60)
+	{
+		ballVelocity.X = ballVelocity.X / velocityMagnitude * 60;
+		ballVelocity.Y = ballVelocity.Y / velocityMagnitude * 60;
+	}
 }
 
 void cBall::CalculateBallPosition()
@@ -80,43 +87,6 @@ void cBall::SetBallPosition()
 	newPos.y = (int)ballPositionY;
 
 	setSpritePos(newPos);
-}
-
-
-/*
-=================================================================
-  Sets the velocity for the ball
-=================================================================
-*/
-void cBall::DetectBasicCollisions()
-{
-	//Top Wall
-	if (ballPositionY < 0 && ballVelocity.Y < 0)
-	{
-		ballPositionY = 0;
-		ballVelocity.Y *= -0.9;
-	}
-
-	//Left Wall
-	if (ballPositionX < 0 && ballVelocity.X < 0)
-	{
-		ballPositionX = 0;
-		ballVelocity.X *= -0.9;
-	}
-
-	//Bottom Wall
-	if (ballPositionY > (WINDOW_HEIGHT - 50) && ballVelocity.Y > 0)
-	{
-		ballPositionY = (WINDOW_HEIGHT - 50);
-		ballVelocity.Y *= -0.9;
-	}
-
-	//Right Wall
-	if (ballPositionX > (WINDOW_WIDTH - 50) && ballVelocity.X > 0)
-	{
-		ballPositionX = (WINDOW_WIDTH - 50);
-		ballVelocity.X *= -0.9;
-	}
 }
 
 

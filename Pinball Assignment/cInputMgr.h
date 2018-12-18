@@ -9,6 +9,8 @@ cHiScoreMgr.h
 #define _CINPUTMGR_H
 #include "GameConstants.h"
 
+#define XUSER_MAX_COUNT 1;
+
 class cInputMgr
 {
 private:
@@ -34,10 +36,13 @@ public:
 	bool Gamepad_Right();
 
 	bool Gamepad_A();
+	bool Gamepad_Y();
 
 	bool Gamepad_RightBumper();
 	bool Gamepad_LeftBumper();
 
+	bool Gamepad_Start();
+	
 	void InputDelayTimer(float deltaTime);
 };
 

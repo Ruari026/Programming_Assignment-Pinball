@@ -12,6 +12,7 @@ cBumper.h
 class cBumper : public cSprite
 {
 private:
+	float resetTimer;
 	int bumperValue;
 
 public:
@@ -20,6 +21,9 @@ public:
 
 	void SetBumperValue(int value);
 	int GetBumperValue();
+
+	void SetResetTimer();
+	bool GetTimerState();
 
 };
 #endif

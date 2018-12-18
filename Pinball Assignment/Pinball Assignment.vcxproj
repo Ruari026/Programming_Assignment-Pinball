@@ -181,7 +181,6 @@ xcopy /Y/S "$(ProjectDir)Fonts\*.*" "$(OutDir)Fonts\"</Command>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\ClassDiagram.cd" />
-    <None Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\ClassDiagram1.cd" />
     <None Include="..\..\..\..\Game%27s Programming 1\Assignment\Pinball Assignment\Pinball Assignment\packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

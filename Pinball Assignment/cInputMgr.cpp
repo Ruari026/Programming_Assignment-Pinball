@@ -222,6 +222,55 @@ bool cInputMgr::Gamepad_A()
 	return false;
 }
 
+bool cInputMgr::Gamepad_Y()
+{
+	if (canInput)
+	{
+		for (DWORD i = 0; i < XUSER_MAX_COUNT; i++)
+		{
+			if (controllerConnected)
+			{
+				XINPUT_STATE _controllerState;
+
+				//Get the controller's state
+				ZeroMemory(&_controllerState, sizeof(XINPUT_STATE));
+				XInputGetState(i, &_controllerState);
+
+				//Detecting Input
+				if (_controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_Y)
+				{
+					canInput = false;
+					inputTimer = 0;
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
+bool cInputMgr::Gamepad_Start()
+{
+	for (DWORD i = 0; i < XUSER_MAX_COUNT; i++)
+	{
+		if (controllerConnected)
+		{
+			XINPUT_STATE _controllerState;
+
+			//Get the controller's state
+			ZeroMemory(&_controllerState, sizeof(XINPUT_STATE));
+			XInputGetState(i, &_controllerState);
+
+			//Detecting Input
+			if (_controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_START)
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 bool cInputMgr::Gamepad_RightBumper()
 {
 	for (DWORD i = 0; i < XUSER_MAX_COUNT; i++)

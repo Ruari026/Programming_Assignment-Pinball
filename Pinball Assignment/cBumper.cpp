@@ -31,7 +31,10 @@ Update the sprite
 */
 void cBumper::update(double deltaTime)
 {
-
+	if (resetTimer > 0)
+	{
+		resetTimer -= deltaTime;
+	}
 }
 
 
@@ -47,5 +50,29 @@ void cBumper::SetBumperValue(int value)
 
 int cBumper::GetBumperValue()
 {
-	return bumperValue;
+	if (resetTimer > 0)
+	{
+		return 0;
+	}
+	else
+	{
+		return bumperValue;
+	}
+}
+
+void cBumper::SetResetTimer()
+{
+	resetTimer = 0.1f;
+}
+
+bool cBumper::GetTimerState()
+{
+	if (resetTimer > 0)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
 }

@@ -21,9 +21,10 @@ void cScene::SetupManagers()
 	theTextureMgr = cTextureMgr::getInstance();
 	theButtonMgr = cButtonMgr::getInstance();
 	theInputMgr = cInputMgr::getInstance();
+	theSoundMgr = cSoundMgr::getInstance();
 }
 
-void cScene::AddSceneItem(LPCSTR itemName, RenderType newType, float newRotation, SDL_Rect newPosition)
+void cScene::AddSceneItem(LPCSTR itemName, RenderConditions newType, float newRotation, SDL_Rect newPosition)
 {
 	if (!GetSceneItem(itemName)) 
 	{
@@ -63,9 +64,9 @@ void cScene::RenderScene(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 	while (itemIterator != sceneItems.end())
 	{
 		LPCSTR itemName = itemIterator->first;
-		RenderType itemType = itemIterator->second->type;
+		RenderConditions itemType = itemIterator->second->type;
 
-		if (itemType == RenderType::Background)
+		if (itemType == RenderConditions::Background)
 		{
 			//Texture Rendering variables
 			SDL_Texture* theTexture = theTextureMgr->getTexture(itemName)->getTexture();
@@ -93,10 +94,10 @@ void cScene::RenderScene(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 	while (itemIterator != sceneItems.end())
 	{
 		LPCSTR itemName = itemIterator->first;
-		RenderType itemType = itemIterator->second->type;
+		RenderConditions itemType = itemIterator->second->type;
 		
 		//Rendering items that aren't affected by the controller's connection state
-		if (itemType == RenderType::Both)
+		if (itemType == RenderConditions::Both)
 		{
 			if (theTextureMgr->getTexture(itemName))
 			{
@@ -135,7 +136,7 @@ void cScene::RenderScene(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 		if (theInputMgr->GetControllerStatus())
 		{
 			//Rendering items that require a controller to be connected
-			if (itemType == RenderType::ControllerConnected)
+			if (itemType == RenderConditions::ControllerConnected)
 			{
 				//Texture Rendering variables
 				SDL_Texture* theTexture = theTextureMgr->getTexture(itemName)->getTexture();
@@ -156,7 +157,7 @@ void cScene::RenderScene(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 		else
 		{
 			//Rendering items that require no controllers to be connected
-			if (itemType == RenderType::ControllerNotConnected)
+			if (itemType == RenderConditions::ControllerNotConnected)
 			{
 				//Texture Rendering variables
 				SDL_Texture* theTexture = theTextureMgr->getTexture(itemName)->getTexture();
@@ -175,6 +176,49 @@ void cScene::RenderScene(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 			}
 		}
 
+		//Rendering Items that are affected by if the game is muted
+		if (theSoundMgr->isMuted())
+		{ 
+			//Rendering items that the game to be muted
+			if (itemType == RenderConditions::GameMuted)
+			{
+				if (theButtonMgr->getBtn(itemName))
+				{
+					//Texture Rendering variables
+					SDL_Rect textureRect = theButtonMgr->getBtn(itemName)->getSpriteDimensions();
+
+					SDL_Rect texturePosition = itemIterator->second->renderPosition;
+					texturePosition.w = textureRect.w;
+					texturePosition.h = textureRect.h;
+
+					FPoint textureScale = { 1,1 };
+
+					//Rendering the texture
+					theButtonMgr->getBtn(itemName)->render(theRenderer, &textureRect, &texturePosition, textureScale);
+				}
+			}
+		}
+		else
+		{
+			//Rendering items that the game to be muted
+			if (itemType == RenderConditions::GameNotMuted)
+			{
+				if (theButtonMgr->getBtn(itemName))
+				{
+					//Texture Rendering variables
+					SDL_Rect textureRect = theButtonMgr->getBtn(itemName)->getSpriteDimensions();
+
+					SDL_Rect texturePosition = itemIterator->second->renderPosition;
+					texturePosition.w = textureRect.w;
+					texturePosition.h = textureRect.h;
+
+					FPoint textureScale = { 1,1 };
+
+					//Rendering the texture
+					theButtonMgr->getBtn(itemName)->render(theRenderer, &textureRect, &texturePosition, textureScale);
+				}
+			}
+		}
 		itemIterator++;
 	}
 }

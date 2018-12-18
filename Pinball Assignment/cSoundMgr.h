@@ -17,6 +17,7 @@ using namespace std;
 class cSoundMgr
 {
 private:
+	bool muted = false;
 	static cSoundMgr* pInstance;
 
 protected:
@@ -30,5 +31,7 @@ public:
 	void deleteSnd();
 	bool initMixer();
 	static cSoundMgr* getInstance();
+	void setMuted(bool newState);
+	bool isMuted();
 };
 #endif

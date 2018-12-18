@@ -57,6 +57,7 @@ private:
 
 	// Game Scene
 	int gameScore = 0;
+
 	// Game objects
 	cSprite gameBkgd;
 	vector<cWall*> wallSprites;

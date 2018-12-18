@@ -13,12 +13,13 @@ cScene.h
 #include "cTextureMgr.h"
 #include "cButtonMgr.h"
 #include "cInputMgr.h"
+#include "cSoundMgr.h"
 
-enum class RenderType { ControllerConnected, ControllerNotConnected, Both, Background};
+enum class RenderConditions { ControllerConnected, ControllerNotConnected, Both, Background, GameMuted, GameNotMuted};
 
 struct RenderItem 
 {
-	RenderType type;
+	RenderConditions type;
 	float rotationAngle;
 	SDL_Rect renderPosition;
 };
@@ -29,6 +30,7 @@ private:
 	cTextureMgr* theTextureMgr;
 	cButtonMgr* theButtonMgr;
 	cInputMgr* theInputMgr;
+	cSoundMgr* theSoundMgr;
 
 protected:
 	map <LPCSTR, RenderItem*> sceneItems;
@@ -37,7 +39,7 @@ public:
 	cScene();
 	void SetupManagers();
 
-	void AddSceneItem(LPCSTR itemName, RenderType newType, float newRotation, SDL_Rect newPosition);
+	void AddSceneItem(LPCSTR itemName, RenderConditions newType, float newRotation, SDL_Rect newPosition);
 	RenderItem* GetSceneItem(LPCSTR itemName);
 
 	void RenderScene(SDL_Window* theSDLWND, SDL_Renderer* theRenderer);
